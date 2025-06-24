@@ -1,0 +1,389 @@
+﻿@model LearningManagementSystem.Models.Assignment
+@{
+    ViewData["Title"] = $"Chấm điểm {(ViewBag.AssignmentType == "Exercise" ? "bài tập" : "bài kiểm tra")} - E-Learning System (Instructor)";
+    Layout = "~/Views/Shared/_InstructorLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-9">
+            <!-- Main Card -->
+            <div class="card border-0 shadow-lg rounded-xl mb-4">
+                <!-- Header -->
+                <div class="card-header bg-gradient-primary p-4 border-0 rounded-top-xl">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h2 class="h4 fw-bold mb-0 text-white">@Model.Title</h2>
+                                <p class="text-white-50 mb-0">
+                                    @if (ViewBag.AssignmentType == "Exercise")
+                                    {
+                                        <span>Chấm điểm bài tập</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Chấm điểm bài kiểm tra</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <a asp-action="ListStudentSubmissions" asp-controller="Instructor" asp-route-assignmentId="@ViewBag.AssignmentId" class="btn btn-light btn-sm rounded-pill px-4 py-2 d-flex align-items-center">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            <span>Quay lại danh sách</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (Model.Submissions == null || !Model.Submissions.Any())
+                    {
+                        <div class="text-center py-5">
+                            <div class="empty-state-icon mx-auto mb-4">
+                                <i class="fas fa-inbox fa-3x text-primary-light opacity-50"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Không tìm thấy bài nộp</h5>
+                            <p class="text-muted mb-0">Không thể tìm thấy bài nộp của học viên này.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        var submission = Model.Submissions.FirstOrDefault();
+                        var essayQuestions = Model.Questions?.Where(q => q.QuestionType == "Essay").DistinctBy(q => q.QuestionId).ToList();
+
+                        <!-- Accordion Card cho thông tin sinh viên và chi tiết trắc nghiệm -->
+                        <div class="card mb-3">
+                            <div class="card-body" style="cursor:pointer;" data-bs-toggle="collapse" data-bs-target="#collapseQuizDetail" aria-expanded="false" aria-controls="collapseQuizDetail">
+                                <div class="d-flex align-items-center">
+                                    @{
+                                        var avatarFile = submission?.User?.Avatar;
+                                        var avatarPath = !string.IsNullOrEmpty(avatarFile)
+                                            ? (avatarFile.StartsWith("/") ? avatarFile : $"/avatars/{avatarFile}")
+                                            : null;
+                                    }
+                                    @if (!string.IsNullOrEmpty(avatarPath))
+                                    {
+                                        <img src="@avatarPath" alt="Avatar" class="rounded-circle me-3" style="width:40px;height:40px;object-fit:cover;" onerror="this.onerror=null;this.src='/images/default-user.jpg';" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" style="width:40px;height:40px;">
+                                            <i class="fas fa-user text-secondary"></i>
+                                        </div>
+                                    }
+                                    <div>
+                                        <h5 class="mb-1">@(submission?.User?.FullName ?? "Không xác định")</h5>
+                                        <p class="text-muted mb-0">@(submission?.User?.UserName ?? "N/A")</p>
+                                    </div>
+                                    <div class="ms-auto text-end">
+                                        <div class="submission-time">
+                                            <i class="fas fa-clock text-primary me-2"></i>
+                                            <span>Nộp bài: @submission?.SubmittedDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                        </div>
+                                        <div class="submission-status badge bg-success-soft text-success px-3 py-2">
+                                            <i class="fas fa-check-circle me-1"></i> Đã nộp
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="collapse" id="collapseQuizDetail">
+                                <div class="card-body">
+                                    <div class="questions-section mt-4">
+                                        <h2 class="questions-title">Chi tiết câu trả lời trắc nghiệm</h2>
+                                        @{
+                                            var multipleChoiceQuestions = Model.Questions?.Where(q => q.QuestionType == "MultipleChoice").ToList();
+                                        }
+                                        @if (multipleChoiceQuestions == null || !multipleChoiceQuestions.Any())
+                                        {
+                                            <div class="alert alert-info mt-3">
+                                                Chưa có câu trả lời trắc nghiệm nào hoặc học viên chưa làm đến phần này.
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < multipleChoiceQuestions.Count; i++)
+                                            {
+                                                var question = multipleChoiceQuestions[i];
+                                                var submissionDetail = Model.Submissions?.FirstOrDefault(s => s.QuestionId == question.QuestionId);
+                                                <div class="quiz-question-card mb-4">
+                                                    <div class="quiz-question-header d-flex align-items-center justify-content-between">
+                                                        <div>
+                                                            <span class="fw-bold">Câu @(i + 1):</span> <span class="ms-2">@question.QuestionText</span>
+                                                        </div>
+                                                        <span class="badge bg-primary-soft text-primary">Trắc nghiệm</span>
+                                                    </div>
+                                                    <div class="quiz-question-content">
+                                                        <ul class="quiz-option-list">
+                                                            @foreach (var option in question.Options.OrderBy(o => o.OptionLabel))
+                                                            {
+                                                                var isSelected = submissionDetail?.SelectedOptionLabel == option.OptionLabel;
+                                                                var optionIsCorrect = option.IsCorrect;
+                                                                var optionClass = isSelected ? (optionIsCorrect ? "selected-correct" : "selected-incorrect") : (optionIsCorrect ? "correct" : "");
+                                                                <li class="quiz-option-item @optionClass">
+                                                                    <span class="option-label">@option.OptionLabel</span>
+                                                                    <span class="ms-2">@option.OptionText</span>
+                                                                    @if (isSelected)
+                                                                    {
+                                                                        <span class="badge ms-3 @(optionIsCorrect ? "bg-success-soft text-success" : "bg-danger-soft text-danger")" style="font-size:12px;">Đã chọn</span>
+                                                                    }
+                                                                    @if (isSelected && optionIsCorrect)
+                                                                    {
+                                                                        <i class="fas fa-check-circle option-icon ms-2"></i>
+                                                                    }
+                                                                    else if (isSelected && !optionIsCorrect)
+                                                                    {
+                                                                        <i class="fas fa-times-circle option-icon ms-2"></i>
+                                                                    }
+                                                                    else if (!isSelected && optionIsCorrect)
+                                                                    {
+                                                                        <i class="fas fa-check option-icon ms-2"></i>
+                                                                    }
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (essayQuestions == null || !essayQuestions.Any())
+                        {
+                            <div class="alert alert-warning d-flex align-items-center rounded-lg p-4 border-0" role="alert">
+                                <div class="alert-icon me-3">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div>Không có câu hỏi tự luận nào để chấm điểm trong bài kiểm tra này.</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="question-accordion" id="accordionQuestions">
+                                @foreach (var question in essayQuestions)
+                                {
+                                    var userSubmission = Model.Submissions
+                                    .FirstOrDefault(s => s.QuestionId == question.QuestionId);
+                                    var questionIndex = essayQuestions.IndexOf(question) + 1;
+                                    var accordionId = $"question-{questionIndex}";
+
+                                    if (userSubmission != null)
+                                    {
+                                        <div class="accordion-item mb-4 border-0 rounded-xl shadow-sm overflow-hidden">
+                                            <h2 class="accordion-header" id="heading-@accordionId">
+                                                <button class="accordion-button @(questionIndex == 1 ? "" : "collapsed") p-4" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse-@accordionId"
+                                                        aria-expanded="@(questionIndex == 1 ? "true" : "false")"
+                                                        aria-controls="collapse-@accordionId">
+                                                    <div class="d-flex align-items-center w-100">
+                                                        <span class="question-number me-3">
+                                                            <span class="badge rounded-pill bg-primary px-3 py-2">Câu @questionIndex</span>
+                                                        </span>
+                                                        <div class="question-content flex-grow-1">
+                                                            <h5 class="mb-0 fw-semibold">@question.QuestionText</h5>
+                                                        </div>
+                                                        <div class="question-score text-end ms-3">
+                                                            <span class="badge bg-light text-dark px-3 py-2">
+                                                                <span class="@(userSubmission?.Score > 0 ? "text-success" : "text-muted")">@(userSubmission?.Score?.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) ?? "0.0")</span>/@(question.MaxScore?.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) ?? "10.0")
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </h2>
+                                            <div id="collapse-@accordionId" class="accordion-collapse collapse @(questionIndex == 1 ? "show" : "")"
+                                                 aria-labelledby="heading-@accordionId">
+                                                <div class="accordion-body p-4 bg-white">
+                                                    <div class="row g-4">
+                                                        <!-- Student's Answer -->
+                                                        <div class="col-md-7">
+                                                            <div class="answer-card h-100 border rounded-lg overflow-hidden">
+                                                                <div class="answer-header p-3 bg-light-soft border-bottom">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <i class="fas fa-pen-fancy text-primary me-2"></i>
+                                                                        <h6 class="mb-0">Câu trả lời của học viên</h6>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="answer-body p-4">
+                                                                    <div class="answer-content p-3 bg-white rounded-lg border">
+                                                                        @if (string.IsNullOrEmpty(userSubmission?.SelectedOptionText))
+                                                                        {
+                                                                            <p class="text-muted fst-italic mb-0">Học viên chưa trả lời câu hỏi này</p>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p class="mb-0">@userSubmission.SelectedOptionText</p>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Grading -->
+                                                        <div class="col-md-5">
+                                                            <div class="grading-card h-100 border rounded-lg overflow-hidden">
+                                                                <div class="grading-header p-3 bg-light-soft border-bottom">
+                                                                    <h6 class="d-flex align-items-center mb-0">
+                                                                        <i class="fas fa-star text-warning me-2"></i>
+                                                                        <span>Đánh giá của giảng viên</span>
+                                                                    </h6>
+                                                                </div>
+                                                                <div class="grading-body p-4">
+                                                                    <form asp-action="SubmitGradeAndFeedback" asp-controller="Instructor" method="post">
+                                                                        <input type="hidden" name="submissionId" value="@userSubmission.SubmissionId" />
+                                                                        <input type="hidden" class="original-score" value="@(userSubmission?.Score?.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) ?? "0.0")" />
+
+                                                                        <!-- Score Input -->
+                                                                        <div class="form-group mb-4">
+                                                                            <label class="form-label d-flex align-items-center fw-medium">
+                                                                                <i class="fas fa-star-half-alt text-warning me-2"></i>
+                                                                                Điểm đánh giá
+                                                                            </label>
+                                                                            <div class="score-input-wrapper">
+                                                                                <div class="input-group">
+                                                                                    <input type="number" name="score" min="0" max="@(question.MaxScore ?? 10)" step="0.1"
+                                                                                           value="@(userSubmission?.Score?.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) ?? "0.0")" class="form-control form-control-lg rounded-start" required />
+                                                                                    <span class="input-group-text bg-light">/@(question.MaxScore?.ToString("F1", System.Globalization.CultureInfo.InvariantCulture) ?? "10.0")</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Feedback Input -->
+                                                                        <div class="form-group mb-4">
+                                                                            <label class="form-label d-flex align-items-center fw-medium">
+                                                                                <i class="fas fa-comment-dots text-primary me-2"></i>
+                                                                                Nhận xét đánh giá
+                                                                            </label>
+                                                                            <input type="hidden" class="original-feedback" value="@(userSubmission?.Feedback?.Trim() ?? "")" />
+                                                                            <textarea name="feedback" class="form-control" rows="4"
+                                                                                      placeholder="Nhập nhận xét chi tiết về bài làm">@(userSubmission?.Feedback?.Trim() ?? "")</textarea>
+                                                                        </div>
+
+                                                                        <!-- Submit Button -->
+                                                                        <div class="text-end">
+                                                                            <button type="submit" class="btn btn-primary px-4 py-2 d-inline-flex align-items-center" id="saveGradeBtn" disabled>
+                                                                                <i class="fas fa-save me-2"></i>
+                                                                                <span>Lưu đánh giá</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="/css/Instructor/GradeAssignment.css" />
+    <style>
+        .quiz-question-card {
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fff;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .quiz-question-header {
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+            border-radius: 12px 12px 0 0;
+            padding: 16px 24px 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .quiz-question-content {
+            padding: 18px 24px 24px 24px;
+        }
+        .quiz-option-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .quiz-option-item {
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            background: #f9fafb;
+            border: 1.5px solid transparent;
+            transition: border 0.2s;
+        }
+        .quiz-option-item.selected-correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            color: #15803d;
+            border-width: 2.5px;
+        }
+        .quiz-option-item.selected-incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+            color: #b91c1c;
+            border-width: 2.5px;
+        }
+        .quiz-option-item.correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            color: #15803d;
+        }
+        .quiz-option-item .option-label {
+            font-weight: 600;
+            margin-right: 8px;
+            color: #64748b;
+            min-width: 22px;
+            display: inline-block;
+        }
+        .quiz-option-item.selected-correct .option-label,
+        .quiz-option-item.correct .option-label {
+            color: #22c55e;
+        }
+        .quiz-option-item.selected-incorrect .option-label {
+            color: #ef4444;
+        }
+        .quiz-option-item .option-icon {
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .quiz-option-item.selected-incorrect .option-icon {
+            color: #ef4444;
+        }
+        .quiz-option-item.selected-correct .option-icon,
+        .quiz-option-item.correct .option-icon {
+            color: #22c55e;
+        }
+        .quiz-option-item:not(.correct):not(.selected-incorrect):not(.selected-correct) .option-icon {
+            color: #64748b;
+        }
+        .bg-success-soft {
+            background: #e6f9ed !important;
+        }
+        .bg-danger-soft {
+            background: #fde8e8 !important;
+        }
+        .bg-primary-soft {
+            background: #e0e7ff !important;
+        }
+        .text-primary {
+            color: #3b82f6 !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="/js/Instructor/GradeAssignment.js"></script>
+}

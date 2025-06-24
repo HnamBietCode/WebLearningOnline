@@ -1,0 +1,77 @@
+﻿@model LearningManagementSystem.Models.ViewModels.InstructorDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard - E-Learning System (Instructor)";
+    Layout = "~/Views/Shared/_InstructorLayout.cshtml";
+}
+
+<!-- Thông báo -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Thống kê tổng quan -->
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="instructor-stat-card">
+            <div class="instructor-stat-icon bg-primary">
+                <i class="bi bi-book"></i>
+            </div>
+            <div class="instructor-stat-content">
+                <h5>Tổng số khóa học</h5>
+                <div class="stat-value">@Model.TotalCourses</div>
+                <p class="stat-description">Số khóa học hiện tại</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="instructor-stat-card">
+            <div class="instructor-stat-icon bg-warning">
+                <i class="bi bi-clipboard-check"></i>
+            </div>
+            <div class="instructor-stat-content">
+                <h5>Bài nộp chưa chấm</h5>
+                <div class="stat-value">@Model.PendingSubmissions</div>
+                <p class="stat-description">Số bài nộp chờ xử lý</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="instructor-stat-card">
+            <div class="instructor-stat-icon bg-success">
+                <i class="bi bi-journal-text"></i>
+            </div>
+            <div class="instructor-stat-content">
+                <h5>Tổng số bài học</h5>
+                <div class="stat-value">@Model.TotalLessons</div>
+                <p class="stat-description">Số bài học đã tạo</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="instructor-stat-card">
+            <div class="instructor-stat-icon bg-info">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+            <div class="instructor-stat-content">
+                <h5>Tổng số bài kiểm tra</h5>
+                <div class="stat-value">@Model.TotalAssignments</div>
+                <p class="stat-description">Số bài kiểm tra đã tạo</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Instructor/InstructorDashboard.css" />
+}

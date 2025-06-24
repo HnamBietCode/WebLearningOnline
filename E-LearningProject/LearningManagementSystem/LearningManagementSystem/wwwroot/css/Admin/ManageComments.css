@@ -1,0 +1,371 @@
+﻿/* Định nghĩa chiều rộng cho từng cột với table-layout fixed */
+.table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Định nghĩa chiều rộng cụ thể cho từng cột */
+.user-column {
+    width: 180px;
+    min-width: 150px;
+}
+
+.course-column {
+    width: 140px;
+    min-width: 120px;
+}
+
+.content-column {
+    width: 280px;
+    min-width: 200px;
+}
+
+.rating-column {
+    width: 160px;
+    min-width: 140px;
+}
+
+.date-column {
+    width: 140px;
+    min-width: 120px;
+}
+
+.action-column {
+    width: 100px;
+    min-width: 80px;
+}
+
+/* Xử lý text overflow cho tất cả các cột */
+.table td, .table th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 12px 16px;
+    vertical-align: middle;
+}
+
+/* Đặc biệt xử lý cho cột user */
+.user-column .d-flex {
+    align-items: center;
+    min-width: 0; /* Quan trọng để text-truncate hoạt động */
+}
+
+.user-column .text-truncate {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Định dạng badge khóa học */
+.course-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+}
+
+/* Định dạng rating display */
+.rating-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+    .rating-display i {
+        font-size: 0.875rem;
+        flex-shrink: 0;
+        margin-right: 1px;
+    }
+
+    .rating-display .small {
+        font-size: 0.75rem;
+        white-space: nowrap;
+        margin-left: 6px;
+        flex-shrink: 0;
+    }
+
+/* Định dạng badge đánh giá */
+.rating-column .badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Avatar styling */
+.avatar-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.875rem;
+}
+
+/* Table styling */
+.table th {
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #f1f3f4;
+    transition: background-color 0.15s ease;
+}
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+/* Badge styling */
+.badge {
+    font-weight: 500;
+}
+
+/* Date column formatting */
+.date-column {
+    font-size: 0.9rem;
+}
+
+    .date-column small {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+/* Pagination styling */
+.pagination .page-link {
+    color: #0d6efd;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem 0.75rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Dropdown styling */
+.dropdown-toggle::after {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .user-column {
+        width: 180px;
+        min-width: 140px;
+    }
+
+    .course-column {
+        width: 130px;
+        min-width: 100px;
+    }
+
+    .content-column {
+        width: 250px;
+        min-width: 180px;
+    }
+
+    .rating-column {
+        width: 120px;
+        min-width: 100px;
+    }
+
+    .date-column {
+        width: 110px;
+        min-width: 90px;
+    }
+}
+
+@media (max-width: 992px) {
+    .user-column {
+        width: 160px;
+        min-width: 120px;
+    }
+
+    .course-column {
+        width: 120px;
+        min-width: 90px;
+    }
+
+    .content-column {
+        width: 200px;
+        min-width: 150px;
+    }
+
+    .rating-column {
+        width: 100px;
+        min-width: 80px;
+    }
+
+    .date-column {
+        width: 100px;
+        min-width: 80px;
+    }
+
+    .action-column {
+        width: 70px;
+        min-width: 60px;
+    }
+
+    /* Ẩn text rating trên tablet */
+    .rating-display .small {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+
+    .user-column {
+        width: 140px;
+        min-width: 100px;
+    }
+
+    .course-column {
+        width: 100px;
+        min-width: 80px;
+    }
+
+    .content-column {
+        width: 160px;
+        min-width: 120px;
+    }
+
+    .rating-column {
+        width: 80px;
+        min-width: 60px;
+    }
+
+    .date-column {
+        width: 90px;
+        min-width: 70px;
+    }
+
+    .action-column {
+        width: 60px;
+        min-width: 50px;
+    }
+
+    /* Chỉ hiển thị sao trên mobile */
+    .rating-display i {
+        font-size: 0.75rem;
+        margin-right: 1px;
+    }
+
+    .rating-display .small {
+        display: none;
+    }
+
+    /* Giảm padding cho mobile */
+    .table td, .table th {
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+
+    .user-column {
+        width: 120px;
+        min-width: 90px;
+    }
+
+    .course-column {
+        width: 90px;
+        min-width: 70px;
+    }
+
+    .content-column {
+        width: 140px;
+        min-width: 100px;
+    }
+
+    .rating-column {
+        width: 70px;
+        min-width: 50px;
+    }
+
+    .date-column {
+        width: 80px;
+        min-width: 60px;
+    }
+
+    .action-column {
+        width: 50px;
+        min-width: 40px;
+    }
+
+    /* Avatar nhỏ hơn trên mobile */
+    .avatar-sm {
+        width: 30px !important;
+        height: 30px !important;
+        line-height: 30px !important;
+        font-size: 0.75rem;
+    }
+
+    /* Rating chỉ hiển thị sao, không có text */
+    .rating-display i {
+        font-size: 0.7rem;
+        margin-right: 0;
+    }
+
+    /* Giảm padding nhiều hơn */
+    .table td, .table th {
+        padding: 6px 8px;
+    }
+
+    /* Course badge nhỏ hơn */
+    .course-badge {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.3rem;
+    }
+}
+
+/* Fix cho overflow issues */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Đảm bảo content không bị vỡ layout */
+.content-column {
+    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Fix cho user column flex layout */
+.user-column .d-flex {
+    width: 100%;
+    min-width: 0;
+}
+
+.user-column .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

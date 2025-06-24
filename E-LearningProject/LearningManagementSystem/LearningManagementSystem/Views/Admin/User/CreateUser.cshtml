@@ -1,0 +1,177 @@
+﻿@model LearningManagementSystem.Models.User
+
+@{
+    ViewData["Title"] = "Thêm người dùng";
+    Layout = "_AdminLayout";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary fw-bold m-0">Thêm người dùng mới</h2>
+                <a asp-action="ManageUsers" class="btn btn-outline-secondary rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+                </a>
+            </div>
+
+            <!-- Notifications -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="bi bi-check-circle-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <strong>Thành công!</strong> @TempData["Success"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <strong>Lỗi!</strong> @TempData["Error"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+
+            <!-- Model validation errors -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <strong>Lỗi xác thực</strong>
+                            <ul class="mt-2 mb-0">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-gradient bg-primary text-white py-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-plus-fill me-2 fs-5"></i>
+                        <span class="fw-bold">Thông tin người dùng</span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateUser" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="UserName" class="form-control custom-input" id="userName" placeholder="Tên đăng nhập" required />
+                                    <label asp-for="UserName" for="userName">Tên đăng nhập *</label>
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="FullName" class="form-control custom-input" id="fullName" placeholder="Họ tên" required />
+                                    <label asp-for="FullName" for="fullName">Họ và tên *</label>
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Email" class="form-control custom-input" id="email" placeholder="Email" required />
+                                    <label asp-for="Email" for="email">Email *</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password" class="form-control custom-input" id="password" placeholder="Mật khẩu" required />
+                                    <label for="password">Mật khẩu *</label>
+                                    <span class="text-danger" id="password-validation">
+                                        @if (ViewData.ModelState.ContainsKey("password"))
+                                        {
+                                            foreach (var error in ViewData.ModelState["password"].Errors)
+                                            {
+                                                @error.ErrorMessage <br />
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select asp-for="RoleId" class="form-select custom-input" id="role" required
+                                            asp-items="@(new SelectList(ViewBag.Roles, "RoleId", "RoleName"))">
+                                        <option value="">-- Chọn vai trò --</option>
+                                    </select>
+                                    <label asp-for="RoleId" for="role">Vai trò *</label>
+                                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label asp-for="Bio" class="form-label fw-bold">Giới thiệu</label>
+                                    <textarea asp-for="Bio" class="form-control custom-input" rows="4" placeholder="Giới thiệu ngắn về người dùng..."></textarea>
+                                    <span asp-validation-for="Bio" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-4">
+                                    <label asp-for="Avatar" class="form-label fw-bold">Ảnh đại diện</label>
+                                    <div class="input-group custom-file-input">
+                                        <input type="file" name="AvatarFile" class="form-control custom-input" id="avatarFile" accept="image/*" />
+                                        <label class="input-group-text" for="avatarFile">
+                                            <i class="bi bi-upload me-1"></i> Chọn ảnh
+                                        </label>
+                                    </div>
+                                    <span class="text-danger" data-valmsg-for="AvatarFile" data-valmsg-replace="true"></span>
+                                    <div id="avatar-preview" class="mt-2 d-none">
+                                        <img src="#" alt="Avatar preview" class="img-thumbnail" style="max-height: 100px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 pt-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-person-plus me-2"></i>Thêm người dùng
+                            </button>
+                            <button type="reset" class="btn btn-light btn-lg px-4">Làm mới</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/Admin/CreateUser.css" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Admin/CreateUser.js"></script>
+}

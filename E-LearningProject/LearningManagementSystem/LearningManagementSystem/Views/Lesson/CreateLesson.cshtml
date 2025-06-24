@@ -1,0 +1,106 @@
+﻿@model LearningManagementSystem.Models.Lesson
+
+@{
+    string role = User.IsInRole("Admin") ? "Admin" : "Instructor";
+    ViewData["Title"] = $"Thêm bài học - E-Learning System ({role})";
+    Layout = role == "Admin" ? "_AdminLayout" : "_InstructorLayout";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h2 class="card-title h4 mb-0"><i class="fas fa-book-reader me-2"></i>Thêm bài học mới</h2>
+        </div>
+        <div class="card-body">
+            <!-- Thông báo -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-controller="Lesson" asp-action="AddLesson" asp-route-courseId="@ViewData["CourseId"]" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="form-floating mb-3">
+                            <input name="LessonTitle" id="lessonTitle" class="form-control" value="@(TempData["LessonTitle"] ?? Model?.LessonTitle)" required />
+                            <label for="lessonTitle">Tiêu đề bài học <span class="text-danger">*</span></label>
+                            <span asp-validation-for="LessonTitle" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <input name="OrderNumber" id="orderNumber" class="form-control" type="number" value="@(TempData["OrderNumber"] ?? ViewBag.DefaultOrderNumber?.ToString() ?? "1")" required readonly />
+                            <label for="orderNumber">Số thứ tự</label>
+                            <span asp-validation-for="OrderNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Nội dung bài học</label>
+                    <div class="form-control p-3 bg-light lesson-content-container">
+                        <textarea name="Content" id="lessonContent" class="form-control border-0 bg-light" rows="6" style="resize: vertical;">@(TempData["Content"] ?? Model?.Content)</textarea>
+                    </div>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold mb-2">Video bài học <small class="text-muted">(tối đa 500MB)</small></label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="fas fa-video"></i></span>
+                        <input type="file" name="videoFile" id="videoFile" class="form-control" accept="video/*" />
+                    </div>
+                    <div class="form-text">Hỗ trợ các định dạng video phổ biến: MP4, AVI, MOV...</div>
+                    @if (ViewData.ModelState.ContainsKey("videoFile"))
+                    {
+                        <span class="text-danger mt-1">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            @ViewData.ModelState["videoFile"].Errors.FirstOrDefault()?.ErrorMessage
+                        </span>
+                    }
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-between">
+                    @if (!string.IsNullOrEmpty(ViewData["CourseId"]?.ToString()))
+                    {
+                        <a asp-controller="Lesson" asp-action="ManageLessons" asp-route-courseId="@ViewData["CourseId"]" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách bài học
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="@role" asp-action="ManageCourses" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách khóa học
+                        </a>
+                    }
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-2"></i>Lưu bài học
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Lesson/AddLesson.css" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Lesson/AddLesson.js"></script>
+}

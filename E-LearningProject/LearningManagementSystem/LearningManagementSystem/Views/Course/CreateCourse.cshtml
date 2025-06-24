@@ -1,0 +1,196 @@
+﻿@model LearningManagementSystem.Models.Course
+
+@{
+    ViewData["Title"] = "Tạo khóa học";
+    // Dynamically set layout based on user role
+    if (User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (User.IsInRole("Instructor"))
+    {
+        Layout = "~/Views/Shared/_InstructorLayout.cshtml";
+    }
+    var currentInstructor = ViewBag.CurrentInstructor as LearningManagementSystem.Models.User;
+}
+
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">Tạo khóa học mới</h2>
+                <a asp-action="ManageCourses" asp-controller="Course" asp-area="" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách khóa học
+                </a>
+            </div>
+
+            <!-- Notifications -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Thành công!</strong> @TempData["Success"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Lỗi!</strong> @TempData["Error"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- ModelState validation errors -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                    <div class="d-flex">
+                        <i class="bi bi-exclamation-circle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Vui lòng sửa các lỗi sau:</strong>
+                            <ul class="mb-0 mt-2">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                            <p class="text-info mt-2 mb-0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Lưu ý: Hình ảnh đã chọn không được giữ lại. Vui lòng chọn lại nếu cần.
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="card-title text-primary mb-0">Thông tin khóa học</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateCourse" asp-controller="Course" asp-area="" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div class="row g-4">
+                            <!-- Course Name -->
+                            <div class="col-12">
+                                <div class="form-floating mb-1">
+                                    <input asp-for="CourseName" class="form-control custom-input" id="courseName" placeholder="Nhập tên khóa học" required />
+                                    <label asp-for="CourseName" for="courseName">Tên khóa học</label>
+                                    <div class="invalid-feedback">Vui lòng nhập tên khóa học.</div>
+                                </div>
+                                <span asp-validation-for="CourseName" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label fw-semibold mb-2">Mô tả khóa học</label>
+                                <textarea asp-for="Description" class="form-control custom-input" rows="5"
+                                          placeholder="Cung cấp mô tả chi tiết về nội dung khóa học, mục tiêu và những gì học viên sẽ học..." required></textarea>
+                                <div class="invalid-feedback">Vui lòng nhập mô tả khóa học.</div>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Price and Instructor (Side by Side) -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-1">
+                                    <input asp-for="Price" class="form-control custom-input" type="number" step="0.01" min="0" id="price" placeholder="0.00" />
+                                    <label asp-for="Price" for="price">Giá (để trống nếu miễn phí)</label>
+                                </div>
+                                <span asp-validation-for="Price" class="text-danger small"></span>
+                                <small class="form-text text-muted">Để trống nếu khóa học miễn phí</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div class="form-floating mb-1">
+                                        <select name="instructorUserName" class="form-select custom-input" id="instructor" required>
+                                            <option value="">Chọn giảng viên</option>
+                                            @foreach (var instructor in (IEnumerable<LearningManagementSystem.Models.User>)ViewBag.Instructors)
+                                            {
+                                                <option value="@instructor.UserName">@instructor.FullName (@instructor.UserName)</option>
+                                            }
+                                        </select>
+                                        <label for="instructor">Giảng viên</label>
+                                        <div class="invalid-feedback">Vui lòng chọn giảng viên.</div>
+                                    </div>
+                                    <span class="text-danger small" data-valmsg-for="instructorUserName" data-valmsg-replace="true"></span>
+                                }
+                                else if (User.IsInRole("Instructor"))
+                                {
+                                    <label class="form-label fw-semibold mb-2">Giảng viên</label>
+                                    <input type="hidden" name="instructorUserName" value="@User.Identity.Name" />
+                                    <div class="form-control bg-light d-flex align-items-center">
+                                        <i class="bi bi-person-circle me-2"></i>
+                                        @(currentInstructor != null
+                                            ? $"{currentInstructor.FullName} ({currentInstructor.UserName})"
+                                            : "Không xác định")
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Course Image -->
+                            <div class="col-12">
+                                <label class="form-label fw-semibold mb-2">Hình ảnh khóa học</label>
+                                <div class="image-upload-container border rounded-3 p-4 text-center bg-light position-relative">
+                                    <div class="preview-container mb-3 d-none">
+                                        <img id="imagePreview" class="img-thumbnail preview-image" alt="Image preview" />
+                                    </div>
+                                    <div class="upload-prompt">
+                                        <i class="bi bi-cloud-arrow-up fs-1 text-primary"></i>
+                                        <p class="mb-2">Kéo và thả hình ảnh hoặc nhấp để chọn</p>
+                                        <small class="text-muted">Kích thước đề xuất: 1280×720px, định dạng PNG hoặc JPEG</small>
+                                    </div>
+                                    <input type="file" name="imageFile" class="form-control custom-input position-absolute inset-0 opacity-0"
+                                           style="cursor: pointer; height: 100%; width: 100%; top: 0; left: 0;" accept="image/*" id="courseImage" />
+                                </div>
+                                <span class="text-danger small" id="imageFile-validation">
+                                    @if (ViewData.ModelState.ContainsKey("imageFile"))
+                                    {
+                                        foreach (var error in ViewData.ModelState["imageFile"].Errors)
+                                        {
+                                            @error.ErrorMessage <br />
+                                        }
+                                    }
+                                </span>
+                            </div>
+
+                            <!-- Submit Buttons -->
+                            <div class="col-12 mt-4">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a asp-action="ManageCourses" asp-controller="Course" asp-area="" class="btn btn-outline-secondary rounded-pill px-4">
+                                        <i class="bi bi-arrow-left me-2"></i>Quay lại
+                                    </a>
+                                    <button type="submit" class="btn btn-primary rounded-pill px-5 py-3">
+                                        <i class="bi bi-plus-circle me-2"></i>Tạo khóa học
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Course/CreateCourse.css" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Course/CreateCourse.js"></script>
+}

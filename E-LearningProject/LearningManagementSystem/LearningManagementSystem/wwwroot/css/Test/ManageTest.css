@@ -1,0 +1,60 @@
+﻿.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+    .btn-purple:hover {
+        background-color: #5e35b1;
+        border-color: #5e35b1;
+        color: white;
+    }
+
+.text-purple {
+    color: #6f42c1;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(111, 66, 193, 0.05);
+}
+
+/* Pagination styles */
+.pagination .page-link {
+    color: #6f42c1;
+    border-radius: 0.25rem;
+    margin: 0 4px;
+    padding: 6px 12px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #9ba4b5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pagination .page-link {
+        margin: 0 2px;
+        padding: 4px 8px;
+    }
+
+    .card-footer {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+
+    .pagination {
+        width: 100%;
+        justify-content: center !important;
+    }
+
+    #paginationInfo {
+        font-size: 0.85rem;
+    }
+}

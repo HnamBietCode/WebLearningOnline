@@ -1,0 +1,71 @@
+﻿body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+}
+
+.text-primary {
+    color: #6f42c1 !important;
+}
+
+.bg-primary {
+    background-color: #6f42c1 !important;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.btn-primary {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #5a32a3;
+        border-color: #5a32a3;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111, 66, 193, 0.2);
+    }
+
+.btn-outline-primary {
+    background-color: transparent;
+    color: #6f42c1;
+    border-color: #6f42c1;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+.table > tbody > tr:hover {
+    background-color: rgba(111, 66, 193, 0.05);
+}
+
+.rounded-pill {
+    border-radius: 50rem;
+}
+
+.rounded-4 {
+    border-radius: 1rem;
+}
+
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+}

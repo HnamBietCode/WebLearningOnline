@@ -1,0 +1,31 @@
+﻿@model LearningManagementSystem.Models.ViewModels.CourseDetailsViewModel
+@{
+    ViewData["Title"] = "Truy cập bị từ chối";
+    Layout = "_Layout";
+}
+
+<link href="~/css/Account/AccessDenied.css" rel="stylesheet" />
+
+<div class="container py-5 text-center access-denied-page">
+    <div class="card p-5 bg-white rounded-4 shadow-sm" style="max-width: 600px; margin: 0 auto;">
+        <div class="error-icon mb-4">
+            <i class="fas fa-lock" style="font-size: 4rem; color: #dc3545;"></i>
+        </div>
+        <h1 class="text-danger fw-bold mb-3">403</h1>
+        <h2 class="text-dark mb-4">Truy cập bị từ chối</h2>
+        <p class="text-muted mb-4">Rất tiếc, bạn không có quyền truy cập trang này. Vui lòng kiểm tra lại vai trò hoặc liên hệ quản trị viên nếu cần hỗ trợ.</p>
+        @if (!string.IsNullOrEmpty(ViewData["ReturnUrl"]?.ToString()))
+        {
+            <p class="text-muted mb-4">Bạn đã cố gắng truy cập: <strong>@ViewData["ReturnUrl"]</strong></p>
+        }
+
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/" class="btn btn-primary rounded-pill px-4 py-2">
+                <i class="fas fa-home me-2"></i>Quay lại trang chủ
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill px-4 py-2">
+                <i class="fas fa-arrow-left me-2"></i>Quay lại trang trước
+            </a>
+        </div>
+    </div>
+</div>

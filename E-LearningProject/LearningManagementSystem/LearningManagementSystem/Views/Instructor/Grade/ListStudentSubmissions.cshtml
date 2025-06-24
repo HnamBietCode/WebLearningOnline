@@ -1,0 +1,537 @@
+﻿@model LearningManagementSystem.ViewModels.StudentSubmissionListViewModel
+@{
+    ViewData["Title"] = $"Danh sách sinh viên làm {(ViewBag.AssignmentType == "Exercise" ? "bài tập" : (ViewBag.AssignmentType == "Test" ? "bài kiểm tra" : "bài kiểm tra"))} - E-Learning System (Instructor)";
+    Layout = "~/Views/Shared/_InstructorLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header Section -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0 fw-bold text-dark">Chấm điểm @((ViewBag.AssignmentType == "Exercise") ? "bài tập" : (ViewBag.AssignmentType == "Test") ? "bài kiểm tra" : "bài kiểm tra")</h1>
+                        <p class="text-secondary mb-0 mt-1">Quản lý và chấm điểm các bài nộp của sinh viên</p>
+                    </div>
+                </div>
+                <a asp-action="SelectGradeType" asp-controller="Instructor" class="btn btn-outline-primary d-flex align-items-center gap-2 px-4">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Quay lại chọn loại</span>
+                </a>
+            </div>
+
+            <!-- Alert Section -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success d-flex align-items-center rounded-3 border-0 shadow-sm mb-4" role="alert">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Thành công!</strong> @TempData["Success"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger d-flex align-items-center rounded-3 border-0 shadow-sm mb-4" role="alert">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Lỗi!</strong> @TempData["Error"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Filter Section -->
+            <div class="card border-0 shadow-sm rounded-3 mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <select class="form-select" id="courseFilter">
+                                <option value="">Tất cả khóa học</option>
+                                @foreach (var course in Model.CourseOptions)
+                                {
+                                    <option value="@course.CourseId">@course.CourseName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="statusFilter">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="completed">Đã làm bài</option>
+                                <option value="graded">Đã chấm điểm</option>
+                                <option value="not-graded">Chưa chấm điểm</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary w-100" id="filterButton">
+                                <i class="fas fa-filter me-2"></i>Lọc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-transparent py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">Danh sách sinh viên đã làm bài</h5>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-primary" id="totalStudents">@Model.Stats.Total sinh viên</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="border-0 ps-4">#</th>
+                                <th class="border-0">Sinh viên</th>
+                                <th class="border-0">@((ViewBag.AssignmentType == "Exercise") ? "Bài tập" : (ViewBag.AssignmentType == "Test") ? "Bài kiểm tra" : "Bài kiểm tra")</th>
+                                <th class="border-0">Thời gian nộp</th>
+                                <th class="border-0">Trạng thái</th>
+                                <th class="border-0">Điểm số</th>
+                                <th class="border-0 text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsList">
+                            @if (Model.Submissions != null && Model.Submissions.Any())
+                            {
+                                int index = (Model.Pagination.CurrentPage - 1) * 10;
+                                foreach (var student in Model.Submissions)
+                                {
+                                    index++;
+                                    <tr>
+                                        <td class="ps-4">@index</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <div class="fw-semibold">@(student.FullName ?? "Không xác định")</div>
+                                                    <div class="small text-muted">@(student.StudentId ?? "N/A")</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold">
+                                                @(student.AssignmentTitle ?? "Không xác định")
+                                                <span class="badge bg-info ms-2">
+                                                    @((student.AssignmentType == "Exercise") ? "Bài tập" : (student.AssignmentType == "Test") ? "Bài kiểm tra" : "-")
+                                                </span>
+                                            </div>
+                                            <div class="small text-muted">@(student.CourseName ?? "Không xác định")</div>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                <i class="far fa-clock me-1"></i>
+                                                @(student.SubmittedAt?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (student.Status == "graded")
+                                            {
+                                                <span class="badge bg-success">Đã chấm điểm</span>
+                                            }
+                                            else if (student.Status == "submitted")
+                                            {
+                                                <span class="badge bg-warning">Chưa chấm điểm</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Không xác định</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (student.Score.HasValue)
+                                            {
+                                                string scoreClass = student.Score >= 8 ? "success" : student.Score >= 6.5 ? "primary" : student.Score >= 5 ? "warning" : "danger";
+                                                <span class="badge bg-@scoreClass">@((student.Score.HasValue ? student.Score.Value.ToString("F1") : "0.0"))/10</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Chưa có điểm</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            @if (!string.IsNullOrEmpty(student.SubmissionId))
+                                            {
+                                                if (student.Status == "graded")
+                                                {
+                                                    <a href="@Url.Action("GradeAssignment", "Instructor", new { submissionId = student.SubmissionId })"
+                                                       data-submission-id="@student.SubmissionId"
+                                                       class="btn btn-outline-primary btn-sm btn-action"
+                                                       title="Xem bài làm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("GradeAssignment", "Instructor", new { submissionId = student.SubmissionId })"
+                                                       data-submission-id="@student.SubmissionId"
+                                                       class="btn btn-primary btn-sm btn-action"
+                                                       title="Chấm điểm">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">Không có bài nộp</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <div class="mb-3">
+                                            <i class="fas fa-users-slash fa-3x text-muted"></i>
+                                        </div>
+                                        <h6 class="mb-2">Không có dữ liệu</h6>
+                                        <p class="text-muted mb-0">Chưa có sinh viên nào nộp bài kiểm tra</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.Pagination.TotalPages > 1)
+                {
+                <div class="card-footer bg-white py-3">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-end mb-0">
+                                <li class="page-item @(Model.Pagination.CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="?assignmentId=@ViewBag.AssignmentId&page=@(Model.Pagination.CurrentPage - 1)">Trước</a>
+                                </li>
+                                @for (int i = 1; i <= (int)Model.Pagination.TotalPages; i++)
+                                {
+                                    <li class="page-item @(Model.Pagination.CurrentPage == i ? "active" : "")">
+                                        <a class="page-link" href="?assignmentId=@ViewBag.AssignmentId&page=@i">@i</a>
+                                    </li>
+                                }
+                                <li class="page-item @(Model.Pagination.CurrentPage == Model.Pagination.TotalPages ? "disabled" : "")">
+                                    <a class="page-link" href="?assignmentId=@ViewBag.AssignmentId&page=@(Model.Pagination.CurrentPage + 1)">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #6c757d;
+        }
+
+        .table th {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.75em;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+}
+
+<script>
+    var gradeAssignmentBaseUrl = '@Url.Action("GradeAssignment", "Instructor")';
+    var listStudentSubmissionsBaseUrl = '@Url.Action("ListStudentSubmissions", "Instructor")';
+
+    // Lấy assignmentId từ URL hoặc ViewBag
+    function getAssignmentIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('assignmentId') || '@ViewBag.AssignmentId';
+    }
+
+    const assignmentId = getAssignmentIdFromUrl();
+    console.log("GradeAssignment Base URL:", gradeAssignmentBaseUrl);
+    console.log("AssignmentId from URL:", assignmentId);
+
+    $(document).ready(function() {
+        // Kiểm tra assignmentId có hợp lệ không
+        if (!assignmentId || assignmentId.trim() === '' || assignmentId === 'null') {
+            console.error("AssignmentId is missing or invalid:", assignmentId);
+            alert("ID bài kiểm tra không hợp lệ. Vui lòng quay lại trang trước.");
+            return;
+        }
+
+        // Load students when filter button is clicked
+        $('#filterButton').click(function() {
+            loadStudents();
+        });
+
+        // Load students when pagination links are clicked (via AJAX)
+        $('#pagination').on('click', 'a.page-link', function(e) {
+            e.preventDefault();
+            var pageMatch = $(this).attr('href').match(/page=(\d+)/);
+            if (pageMatch) {
+                loadStudents(parseInt(pageMatch[1]));
+            } else {
+                console.error("Could not parse page number from pagination link:", $(this).attr('href'));
+            }
+        });
+
+        // Delegated event listener for action buttons (for AJAX-rendered buttons)
+        $('#studentsList').on('click', 'a.btn-action', function(e) {
+            e.preventDefault();
+            const $button = $(this);
+            const submissionId = $button.attr('data-submission-id');
+            console.log("Button clicked. HTML:", $button[0].outerHTML);
+            console.log("Submission ID:", submissionId);
+
+            if (!submissionId || submissionId.trim() === "") {
+                console.error("Submission ID is missing or empty:", $button[0].outerHTML);
+                alert("Không thể chuyển hướng: Submission ID không hợp lệ.");
+                return;
+            }
+
+            // Thêm assignmentId vào URL redirect để tránh lỗi khi quay lại
+            const redirectUrl = `${gradeAssignmentBaseUrl}?submissionId=${encodeURIComponent(submissionId)}&assignmentId=${encodeURIComponent(assignmentId)}`;
+            console.log("Redirecting to:", redirectUrl);
+
+            // Try multiple redirect methods
+            try {
+                window.location.assign(redirectUrl);
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        console.warn("window.location.assign failed, trying window.location.href");
+                        window.location.href = redirectUrl;
+                    }
+                }, 500);
+            } catch (error) {
+                console.error("Redirect failed:", error);
+                alert("Không thể chuyển hướng. Vui lòng kiểm tra console.");
+            }
+        });
+
+        // Initial load of students when the page is ready
+        loadStudents();
+    });
+
+    function loadStudents(page = 1) {
+        const courseId = $('#courseFilter').val();
+        const status = $('#statusFilter').val();
+        console.log("Loading students with params:", { assignmentId, courseId, status, page });
+
+        // Kiểm tra assignmentId trước khi gửi request
+        if (!assignmentId || assignmentId.trim() === '' || assignmentId === 'null') {
+            console.error("Cannot load students: assignmentId is invalid:", assignmentId);
+            showError("ID bài kiểm tra không hợp lệ");
+            return;
+        }
+
+        $('#studentsList').html(`
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                    <p class="mt-2 text-muted mb-0">Đang tải danh sách sinh viên...</p>
+                </td>
+            </tr>
+        `);
+
+        $.ajax({
+            url: '@Url.Action("GetStudentSubmissions", "Instructor")',
+            type: 'GET',
+            data: { assignmentId, courseId, status, page },
+            success: function(response) {
+                console.log("GetStudentSubmissions response:", response);
+                if (response.success) {
+                    displayStudents(response.data);
+                    updatePagination(response.pagination);
+                    updateStats(response.stats);
+                } else {
+                    console.error("Response success is false:", response);
+                    showError("Không thể tải dữ liệu: " + (response.message || "Lỗi không xác định"));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX request failed:", status, error, xhr.responseText);
+                showError("Lỗi kết nối: " + error);
+            }
+        });
+    }
+
+    function displayStudents(students) {
+        console.log("Students data to display:", students);
+        if (!students || students.length === 0) {
+            $('#studentsList').html(`
+                <tr>
+                    <td colspan="7" class="text-center py-4">
+                        <div class="mb-3">
+                            <i class="fas fa-users-slash fa-3x text-muted"></i>
+                        </div>
+                        <h6 class="mb-2">Không có dữ liệu</h6>
+                        <p class="text-muted mb-0">Chưa có sinh viên nào nộp bài kiểm tra</p>
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        const tbody = $('#studentsList');
+        tbody.empty();
+
+        students.forEach((student, index) => {
+            console.log(`Rendering student ${index + 1}:`, student);
+            const assignmentTypeText = student.assignmentType === 'Exercise' ? 'Bài tập' : (student.assignmentType === 'Test' ? 'Bài kiểm tra' : '-');
+            const row = `
+                <tr>
+                    <td class="ps-4">${index + 1}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <div class="fw-semibold">${student.fullName ?? "Không xác định"}</div>
+                                <div class="small text-muted">${student.studentId ?? "N/A"}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-semibold">${student.assignmentTitle ?? "Không xác định"}
+                            <span class="badge bg-info ms-2">${assignmentTypeText}</span>
+                        </div>
+                        <div class="small text-muted">${student.courseName ?? "Không xác định"}</div>
+                    </td>
+                    <td>
+                        <div class="small">
+                            <i class="far fa-clock me-1"></i>
+                            ${student.submittedAt ? new Date(student.submittedAt).toLocaleString('vi-VN') : "N/A"}
+                        </div>
+                    </td>
+                    <td>
+                        ${getStatusBadge(student.status)}
+                    </td>
+                    <td>
+                        ${getScoreBadge(student.score)}
+                    </td>
+                    <td class="text-center">
+                        ${student.submissionId ? `
+                            <a href="${gradeAssignmentBaseUrl}?submissionId=${encodeURIComponent(student.submissionId)}&assignmentId=${encodeURIComponent(assignmentId)}"
+                               data-submission-id="${student.submissionId}"
+                               class="btn ${student.status === 'graded' ? 'btn-outline-primary' : 'btn-primary'} btn-sm btn-action"
+                               title="${student.status === 'graded' ? 'Xem bài làm' : 'Chấm điểm'}">
+                                <i class="${student.status === 'graded' ? 'fas fa-eye' : 'fas fa-check'}"></i>
+                            </a>
+                        ` : '<span class="text-muted small">Không có bài nộp</span>'}
+                    </td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+    }
+
+    function getStatusBadge(status) {
+        switch(status) {
+            case 'graded':
+                return '<span class="badge bg-success">Đã chấm điểm</span>';
+            case 'submitted':
+                return '<span class="badge bg-warning">Chưa chấm điểm</span>';
+            default:
+                return '<span class="badge bg-secondary">Không xác định</span>';
+        }
+    }
+
+    function getScoreBadge(score) {
+        if (score === null || score === undefined) return '<span class="badge bg-secondary">Chưa có điểm</span>';
+        const scoreClass = score >= 8 ? 'success' : score >= 6.5 ? 'primary' : score >= 5 ? 'warning' : 'danger';
+        return `<span class="badge bg-${scoreClass}">${score.ToString("F1")}/10</span>`;
+    }
+
+    function updatePagination(pagination) {
+        console.log("Updating pagination:", pagination);
+        const container = $('#pagination');
+        container.empty();
+
+        if (pagination.totalPages <= 1) return;
+
+        container.append(`
+            <li class="page-item ${pagination.currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="loadStudents(${pagination.currentPage - 1}); return false;">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+        `);
+
+        for (let i = 1; i <= pagination.totalPages; i++) {
+            container.append(`
+                <li class="page-item ${i === pagination.currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="loadStudents(${i}); return false;">${i}</a>
+                </li>
+            `);
+        }
+
+        container.append(`
+            <li class="page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="loadStudents(${pagination.currentPage + 1}); return false;">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        `);
+
+        $('#showingStart').text(pagination.start);
+        $('#showingEnd').text(pagination.end);
+        $('#totalItems').text(pagination.total);
+    }
+
+    function updateStats(stats) {
+        console.log("Updating stats:", stats);
+        $('#totalStudents').text(`${stats.total} sinh viên`);
+    }
+
+    function showError(message = "Không thể tải danh sách sinh viên. Vui lòng thử lại sau.") {
+        $('#studentsList').html(`
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="text-danger mb-3">
+                        <i class="fas fa-exclamation-triangle fa-3x"></i>
+                    </div>
+                    <h6 class="mb-2">Đã có lỗi xảy ra</h6>
+                    <p class="text-muted mb-0">${message}</p>
+                </td>
+            </tr>
+        `);
+    }
+</script>

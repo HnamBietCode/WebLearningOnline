@@ -1,0 +1,134 @@
+﻿@model LearningManagementSystem.Models.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Tất cả bài kiểm tra";
+    Layout = "_Layout";
+}
+
+<!-- FontAwesome CDN for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Hidden form for anti-forgery token -->
+<form id="hiddenForm" style="display: none;">
+    <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+</form>
+
+<div class="tests-container">
+    <div class="tests-card">
+        <div class="p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="section-title">
+                    <i class="fas fa-clipboard-list me-2"></i>Tất cả bài kiểm tra
+                </h1>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-back">
+                    <i class="fas fa-arrow-left me-2"></i>Trở về trang chủ
+                </a>
+            </div>
+
+            <div class="search-container mb-4">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchTests" class="form-control" placeholder="Tìm bài kiểm tra..." onkeyup="searchTests()">
+                </div>
+            </div>
+
+            <div class="courses-container">
+                @foreach (var course in Model.Courses.Where(c => c != null && c.IsEnrolled))
+                {
+                    var enrollment = Model.Enrollments?.FirstOrDefault(e => e != null && e.CourseId == course.CourseId && e.UserName == (Model.User?.UserName ?? ""));
+                    var enrollmentDate = enrollment?.EnrollmentDate ?? DateTime.MinValue;
+
+                    <div class="course-section">
+                        <div class="course-header">
+                            <h3 class="course-title">
+                                <i class="fas fa-book me-2"></i>@course.CourseName
+                            </h3>
+                            <span class="test-count">@course.Assignments.Count(a => a != null && a.AssignmentType == "Test" && a.LessonId == null && a.CreatedDate >= enrollmentDate) bài kiểm tra</span>
+                        </div>
+                        <div class="test-list">
+                            @if (course.Assignments == null || !course.Assignments.Any(a => a != null && a.AssignmentType == "Test" && a.LessonId == null && a.CreatedDate >= enrollmentDate))
+                            {
+                                <div class="empty-state">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-clipboard-list"></i>
+                                    </div>
+                                    <h3>Chưa có bài kiểm tra nào</h3>
+                                    <p>Khóa học này hiện tại chưa có bài kiểm tra nào để thực hiện.</p>
+                                </div>
+                            }
+                            else
+                            {
+                                @foreach (var test in course.Assignments.Where(a => a != null && a.AssignmentType == "Test" && a.LessonId == null && a.CreatedDate >= enrollmentDate))
+                                {
+                                    var isCompleted = Model.Submissions?.Any(s => s != null && s.AssignmentId == test.AssignmentId && s.UserName == (Model.User?.UserName ?? "")) ?? false;
+
+                                    <div class="test-card @(isCompleted ? "completed" : "pending")">
+                                        <div class="test-content">
+                                            <div class="test-status">
+                                                <div class="status-icon @(isCompleted ? "completed" : "pending")">
+                                                    <i class="fas @(isCompleted ? "fa-check" : "fa-hourglass-half")"></i>
+                                                </div>
+                                            </div>
+                                            <div class="test-info">
+                                                <h4 class="test-title">@test.Title</h4>
+                                                <div class="test-meta">
+                                                    <div class="meta-item">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                        <span>Tạo: @test.CreatedDate.ToString("dd/MM/yyyy")</span>
+                                                    </div>
+                                                    <div class="meta-item">
+                                                        <i class="fas fa-calendar-check"></i>
+                                                        <span>Hạn: @test.CreatedDate.AddDays(1).ToString("dd/MM/yyyy")</span>
+                                                    </div>
+                                                    <div class="meta-item status-text @(isCompleted ? "completed" : "pending")">
+                                                        <i class="fas @(isCompleted ? "fa-check-circle" : "fa-clock")"></i>
+                                                        <span>@(isCompleted ? "Đã hoàn thành" : "Chưa làm")</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="test-action">
+                                                @if (isCompleted)
+                                                {
+                                                    <a href="#" class="btn btn-result" onclick="showConfirmationModal('@test.AssignmentId', '@course.CourseId', '@test.Title', 'view')">
+                                                        <i class="fas fa-eye"></i>
+                                                        Xem kết quả
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="btn btn-start" onclick="showConfirmationModal('@test.AssignmentId', '@course.CourseId', '@test.Title', 'take')">
+                                                        <i class="fas fa-play"></i>
+                                                        Làm bài
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle"></h3>
+        <p id="modalMessage"></p>
+        <div class="modal-buttons">
+            <button id="confirmButton" class="btn btn-confirm">Xác nhận</button>
+            <button id="cancelButton" class="btn btn-cancel">Hủy</button>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Course/AllTests.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/Course/AllTests.js" asp-append-version="true"></script>
+}

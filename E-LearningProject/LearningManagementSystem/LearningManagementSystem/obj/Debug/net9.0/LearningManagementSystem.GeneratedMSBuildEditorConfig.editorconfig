@@ -1,0 +1,273 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = LearningManagementSystem
+build_property.RootNamespace = LearningManagementSystem
+build_property.ProjectDir = D:\E-LearningProject\E-LearningProject\E-LearningProject\LearningManagementSystem\LearningManagementSystem\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\E-LearningProject\E-LearningProject\E-LearningProject\LearningManagementSystem\LearningManagementSystem
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDaGFuZ2VQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/EditProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZGl0UHJvZmlsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/MyLearning.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxNeUxlYXJuaW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/UpdateAvatar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVcGRhdGVBdmF0YXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Account/VerifyOtp.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxWZXJpZnlPdHAuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Admin/Comment/ManageComments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ29tbWVudFxNYW5hZ2VDb21tZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Admin/Notification/SendNotification.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTm90aWZpY2F0aW9uXFNlbmROb3RpZmljYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Admin/User/CreateUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlclxDcmVhdGVVc2VyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Admin/User/EditUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlclxFZGl0VXNlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Admin/User/ManageUsers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlclxNYW5hZ2VVc2Vycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Assignment/CreateAssignment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXNzaWdubWVudFxDcmVhdGVBc3NpZ25tZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Assignment/EditAssignment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXNzaWdubWVudFxFZGl0QXNzaWdubWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Assignment/ManageAssignments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXNzaWdubWVudFxNYW5hZ2VBc3NpZ25tZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Cart/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxDaGVja291dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Cart/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Cart/PaymentSuccess.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxQYXltZW50U3VjY2Vzcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/AllTests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXEFsbFRlc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/CourseDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXENvdXJzZURldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/CreateCourse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXENyZWF0ZUNvdXJzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/EditCourse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXEVkaXRDb3Vyc2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/ManageCourses.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXE1hbmFnZUNvdXJzZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/TakeTest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXFRha2VUZXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Course/ViewTestResult.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlXFZpZXdUZXN0UmVzdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Enrollment/CreateEnrollment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudFxDcmVhdGVFbnJvbGxtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Enrollment/EditEnrollment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudFxFZGl0RW5yb2xsbWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Enrollment/ManageEnrollments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudFxNYW5hZ2VFbnJvbGxtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Grade/Grade.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxHcmFkZVxHcmFkZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Grade/GradeAssignment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxHcmFkZVxHcmFkZUFzc2lnbm1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Grade/GradeExams.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxHcmFkZVxHcmFkZUV4YW1zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Grade/ListStudentSubmissions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxHcmFkZVxMaXN0U3R1ZGVudFN1Ym1pc3Npb25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Grade/SelectGradeType.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxHcmFkZVxTZWxlY3RHcmFkZVR5cGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Instructor/Progress/ViewProgressByUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5zdHJ1Y3RvclxQcm9ncmVzc1xWaWV3UHJvZ3Jlc3NCeVVzZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Lesson/CreateLesson.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVzc29uXENyZWF0ZUxlc3Nvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Lesson/EditLesson.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVzc29uXEVkaXRMZXNzb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Lesson/ManageLessons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVzc29uXE1hbmFnZUxlc3NvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Notification/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Payment/History.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxIaXN0b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Payment/ManagePayment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxNYW5hZ2VQYXltZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Payment/PaymentDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5bWVudFxQYXltZW50RGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Search/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VhcmNoXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/_ChatBot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DaGF0Qm90LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/_InstructorLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9JbnN0cnVjdG9yTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/_SidebarInstructor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TaWRlYmFySW5zdHJ1Y3Rvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Test/CreateTest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVzdFxDcmVhdGVUZXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Test/EditTest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVzdFxFZGl0VGVzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Test/ManageTests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVzdFxNYW5hZ2VUZXN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/E-LearningProject/E-LearningProject/E-LearningProject/LearningManagementSystem/LearningManagementSystem/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-tmoa38ygmx

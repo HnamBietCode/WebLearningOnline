@@ -1,0 +1,159 @@
+﻿@model LearningManagementSystem.Models.ViewModels.PaymentDetailViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("History", "Payment")">Lịch sử thanh toán</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Chi tiết giao dịch</li>
+                </ol>
+            </nav>
+
+            <h2 class="mb-4 text-dark fw-bold">Chi tiết thanh toán</h2>
+
+            <div class="card border-0 rounded-4 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-receipt me-2"></i>Thông tin giao dịch
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Mã giao dịch:</span>
+                                <span class="fw-bold">@Model.Payment.PaymentId</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Ngày thanh toán:</span>
+                                <span class="fw-bold">@Model.Payment.PaymentDate.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Phương thức:</span>
+                                <span class="fw-bold">@Model.Payment.PaymentMethod</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Trạng thái:</span>
+                                <span class="fw-bold">
+                                    @if (Model.Payment.PaymentStatus == "Completed")
+                                    {
+                                        <span class="badge bg-success rounded-pill">Thành công</span>
+                                    }
+                                    else if (Model.Payment.PaymentStatus == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark rounded-pill">Đang xử lý</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger rounded-pill">Thất bại</span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Loại giao dịch:</span>
+                                <span class="fw-bold">
+                                    @if (Model.Payment.TransactionType == "CoursePurchase")
+                                    {
+                                        <span>Mua khóa học</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Nạp tiền</span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="text-muted me-3">Tổng tiền:</span>
+                                <span class="fw-bold text-primary fs-5">₫@Model.Payment.Amount.ToString("N0")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+            {
+                <div class="card border-0 rounded-4 shadow-sm">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-list-ul me-2"></i>Chi tiết đơn hàng
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mã khóa học</th>
+                                        <th>Tên khóa học</th>
+                                        <th>Giá tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>@item.CourseId</td>
+                                            <td>
+                                                @if (item.Course != null)
+                                                {
+                                                    <a href="@Url.Action("Details", "Course", new { id = item.CourseId })">
+                                                        @item.Course.CourseName
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span>Khóa học không tồn tại</span>
+                                                }
+                                            </td>
+                                            <td class="text-primary fw-bold">₫@item.Price.ToString("N0")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2" class="text-end fw-bold">Tổng cộng:</td>
+                                        <td class="text-primary fw-bold">₫@Model.Payment.Amount.ToString("N0")</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="text-center mt-4">
+                <a href="@Url.Action("History", "Payment")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Quay lại lịch sử thanh toán
+                </a>
+
+                @if (Model.Payment.PaymentStatus == "Completed" && Model.Payment.TransactionType == "CoursePurchase")
+                {
+                    <a href="@Url.Action("MyLearning", "Account")" class="btn btn-primary btn-lg rounded-pill px-4 ms-2">
+                        <i class="bi bi-book me-2"></i>Đi đến khóa học của tôi
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Payment/PaymentDetail.css" />
+}

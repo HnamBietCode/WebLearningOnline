@@ -1,0 +1,228 @@
+﻿@using System.Linq
+@model LearningManagementSystem.Models.Lesson
+
+@{
+    string role = User.IsInRole("Admin") ? "Admin" : "Instructor";
+    ViewData["Title"] = $"Quản lý bài tập - E-Learning System ({role})";
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_Adminlayout.cshtml" : "~/Views/Shared/_Instructorlayout.cshtml";
+}
+
+<!-- Thông báo -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm border-start border-success border-4" role="alert">
+        <i class="bi bi-check-circle me-2"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm border-start border-danger border-4" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Header khu vực chính -->
+<div class="container-fluid px-0">
+    <div class="row g-0">
+        <div class="col-12">
+            <div class="card shadow mb-4" style="background: linear-gradient(90deg,rgb(243, 245, 248) 0%,rgb(235, 238, 240) 100%); border: none;">
+                <div class="card-body py-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-1 fw-bold text-primary">
+                                <i class="bi bi-journal-text me-1 text-primary"></i> Quản lý bài tập
+                            </h4>
+                            <p class="mb-0 opacity-75 text-primary">
+                                <i class="bi bi-journal-text me-1 text-white"></i> @(Model?.LessonTitle ?? "Không xác định")
+                            </p>
+                        </div>
+                        <a asp-controller="Assignment" asp-action="CreateAssignment" asp-route-lessonId="@Model?.LessonId"
+                           class="btn btn-light text-primary fw-semibold shadow-sm">
+                            <i class="bi bi-plus-circle-fill me-2"></i> Thêm bài tập mới
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thanh công cụ -->
+<div class="card shadow-sm mb-4 border-0">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="form-control border-start-0 ps-0"
+                           placeholder="Tìm kiếm bài tập..." aria-label="Tìm kiếm bài tập">
+                </div>
+            </div>
+            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <a asp-controller="Lesson" asp-action="ManageLessons" asp-route-courseId="@Model?.CourseId"
+                   class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i> Quay lại danh sách bài học
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Danh sách bài tập -->
+@if (Model != null && Model.Assignments != null && Model.Assignments.Any())
+{
+    <div class="card border-0 shadow-sm bg-white rounded-3">
+        <div class="card-header bg-white py-3" style="border-bottom: none;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-primary fw-bold">
+                    <i class="bi bi-journal-text me-1 text-primary"></i>Danh sách bài tập
+                </h5>
+                <span class="badge bg-primary text-white rounded-pill">@Model.Assignments.Count() bài tập</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="px-4 py-3">Tiêu đề bài tập</th>
+                            <th class="px-4 py-3">Loại bài tập</th>
+                            <th class="px-4 py-3">Ngày tạo</th>
+                            <th class="px-4 py-3 text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignmentTableBody">
+                        @foreach (var assignment in Model.Assignments)
+                        {
+                            var hasSubmission = assignment.Submissions != null && assignment.Submissions.Count > 0;
+                            <tr>
+                                <td class="px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-5 me-3">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </div>
+                                        <span class="fw-medium">@(assignment?.Title ?? "Không xác định")</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="badge rounded-pill
+                                          @(assignment?.AssignmentType == "Quiz" ? "bg-info" :
+                                            assignment?.AssignmentType == "Essay" ? "bg-warning" :
+                                            assignment?.AssignmentType == "File" ? "bg-success" :
+                                            assignment?.AssignmentType == "Exercise" ? "bg-success bg-opacity-10" : "bg-secondary")">
+                                        @(assignment?.AssignmentType ?? "Không xác định")
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-muted">
+                                    <i class="bi bi-calendar-event me-1"></i> @(assignment?.CreatedDate.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <div class="btn-group" role="group">
+                                        @if (hasSubmission)
+                                        {
+                                            <a class="btn btn-outline-warning btn-sm disabled" tabindex="-1" aria-disabled="true" title="Chỉnh sửa bài tập">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="EditAssignment" asp-controller="Assignment" asp-route-assignmentId="@assignment.AssignmentId"
+                                               class="btn btn-outline-warning btn-sm" data-bs-toggle="tooltip" title="Chỉnh sửa bài tập">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        }
+                                        <form asp-controller="Assignment" asp-action="DeleteAssignment" asp-route-assignmentId="@assignment?.AssignmentId"
+                                              method="post" style="display:inline;" id="deleteAssignmentForm_@assignment.AssignmentId">
+                                            @Html.AntiForgeryToken()
+                                            <button type="button" class="btn btn-outline-danger btn-sm btn-delete-assignment" data-form-id="deleteAssignmentForm_@assignment.AssignmentId" data-bs-toggle="tooltip" title="Xóa bài tập">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    @if (hasSubmission)
+                                    {
+                                        <div class="mt-2 text-danger small">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Đã có sinh viên nộp bài này, không thể chỉnh sửa!
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="card-footer bg-white py-3">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-end mb-0">
+                        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="?lessonId=@Model.LessonId&page=@(ViewBag.CurrentPage - 1)">Trước</a>
+                        </li>
+                        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                <a class="page-link" href="?lessonId=@Model.LessonId&page=@i">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="?lessonId=@Model.LessonId&page=@(ViewBag.CurrentPage + 1)">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body py-5 text-center">
+            <div class="py-4">
+                <i class="bi bi-journal-x text-muted" style="font-size: 4rem;"></i>
+                <h5 class="mt-4">Chưa có bài tập nào cho bài học này</h5>
+                <p class="text-muted mb-4">Hãy thêm bài tập mới để học viên có thể làm bài</p>
+                <a asp-controller="Assignment" asp-action="CreateAssignment" asp-route-lessonId="@Model?.LessonId"
+                   class="btn btn-primary px-4">
+                    <i class="bi bi-plus-circle me-2"></i> Thêm bài tập mới
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal xác nhận xóa bài tập -->
+<div class="modal fade" id="deleteAssignmentModal" tabindex="-1" aria-labelledby="deleteAssignmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="deleteAssignmentModalLabel">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">Bạn có chắc chắn muốn xóa bài tập này?</div>
+        <div class="text-danger small">Thao tác này không thể hoàn tác.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteAssignmentBtn">
+            <i class="bi bi-trash me-1"></i> Xác nhận xóa
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Assignment/ManageAssignments.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Assignment/ManageAssignments.js"></script>
+}

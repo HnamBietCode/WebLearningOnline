@@ -1,0 +1,192 @@
+﻿@model LearningManagementSystem.Models.Course
+@{
+    // Xác định vai trò để chọn layout và controller
+    string role = User.IsInRole("Admin") ? "Admin" : "Instructor";
+    ViewData["Title"] = "Quản lý kiểm tra - " + Model.CourseName;
+    Layout = role == "Admin" ? "_AdminLayout" : "_InstructorLayout";
+}
+
+<!-- Thông báo -->
+<div class="container-fluid px-4 py-3">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm border-start border-success border-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm border-start border-danger border-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Card chính -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h4 class="mb-0 text-primary"><i class="bi bi-clipboard-check me-2"></i>Quản lý kiểm tra</h4>
+                <p class="text-muted mb-0 small">Khóa học: @Model.CourseName</p>
+            </div>
+            <a asp-action="CreateTest" asp-controller="Test" asp-route-courseId="@Model.CourseId"
+               class="btn btn-purple d-flex align-items-center">
+                <i class="bi bi-plus-circle me-2"></i> Tạo bài kiểm tra
+            </a>
+        </div>
+
+        <div class="card-body">
+            @if (Model.Assignments == null || !Model.Assignments.Any(a => a.AssignmentType == "Test"))
+            {
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-journal-x text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="text-muted">Không có bài kiểm tra nào</h5>
+                    <p class="text-muted">Hãy tạo bài kiểm tra đầu tiên cho khóa học này.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle border-light">
+                        <thead class="table-light text-dark">
+                            <tr>
+                                <th scope="col" class="rounded-start">Tiêu đề</th>
+                                <th scope="col">Mô tả</th>
+                                <th scope="col" class="text-center">Thời gian</th>
+                                <th scope="col" class="text-center">Số câu hỏi</th>
+                                <th scope="col" class="text-center">Ngày tạo</th>
+                                <th scope="col" class="text-center rounded-end">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testTableBody">
+                            @foreach (var test in Model.Assignments.Where(a => a.AssignmentType == "Test").OrderByDescending(a => a.CreatedDate))
+                            {
+                                var hasSubmission = test.Submissions != null && test.Submissions.Count > 0;
+                                var disabledClass = hasSubmission ? "disabled" : "";
+                                var disabledAttrs = hasSubmission ? "tabindex='-1' aria-disabled='true'" : "";
+                                <tr class="test-row border-5 border-white border-top border-bottom">
+                                    <td class="fw-medium">@test.Title</td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 250px;" title="@test.Description">
+                                            @test.Description
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (test.DurationMinutes.HasValue)
+                                        {
+                                            <span class="badge bg-info text-dark">@test.DurationMinutes phút</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Không giới hạn</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary">@(test.Questions?.Count ?? 0)</span>
+                                    </td>
+                                    <td class="text-center text-muted">
+                                        <small>@test.CreatedDate.ToString("dd/MM/yyyy")</small><br>
+                                        <small>@test.CreatedDate.ToString("HH:mm")</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            @if (hasSubmission)
+                                            {
+                                                <a class="btn btn-outline-warning btn-sm disabled"
+                                                   tabindex="-1" aria-disabled="true"
+                                                   title="Chỉnh sửa bài kiểm tra">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="EditTest" asp-controller="Test" asp-route-assignmentId="@test.AssignmentId"
+                                                   class="btn btn-outline-warning btn-sm"
+                                                   data-bs-toggle="tooltip" title="Chỉnh sửa bài kiểm tra">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                            }
+                                            <form asp-action="DeleteTest" asp-controller="Test" asp-route-id="@test.AssignmentId"
+                                                  method="post" style="display:inline;" id="deleteTestForm_@test.AssignmentId">
+                                                @Html.AntiForgeryToken()
+                                                <button type="button" class="btn btn-outline-danger btn-sm btn-delete-test" data-form-id="deleteTestForm_@test.AssignmentId" data-bs-toggle="tooltip" title="Xóa bài kiểm tra">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        @if (hasSubmission)
+                                        {
+                                            <div class="mt-2 text-danger small">
+                                                <i class="bi bi-exclamation-triangle-fill me-1"></i> Đã có người dùng làm bài kiểm tra này, không thể chỉnh sửa!
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+        <div class="card-footer bg-white border-0 pt-0 d-flex justify-content-between align-items-center">
+            <a asp-action="ManageCourses" asp-controller="Course" asp-area="" class="btn btn-light border">
+                <i class="bi bi-arrow-left me-2"></i> Quay lại danh sách khóa học
+            </a>
+            @if (Model.Assignments != null && Model.Assignments.Any(a => a.AssignmentType == "Test"))
+            {
+                <div class="d-flex align-items-center gap-3">
+                    <div id="paginationInfo" class="text-muted small"></div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end mb-0">
+                            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="?courseId=@Model.CourseId&page=@(ViewBag.CurrentPage - 1)">Trước</a>
+                            </li>
+                            @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                    <a class="page-link" href="?courseId=@Model.CourseId&page=@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                                <a class="page-link" href="?courseId=@Model.CourseId&page=@(ViewBag.CurrentPage + 1)">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa bài kiểm tra -->
+<div class="modal fade" id="deleteTestModal" tabindex="-1" aria-labelledby="deleteTestModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="deleteTestModalLabel">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">Bạn có chắc chắn muốn xóa bài kiểm tra này?</div>
+        <div class="text-danger small">Thao tác này không thể hoàn tác.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteTestBtn">
+            <i class="bi bi-trash me-1"></i> Xác nhận xóa
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Test/ManageTest.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Test/ManageTest.js"></script>
+}

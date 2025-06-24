@@ -1,0 +1,126 @@
+﻿@model LearningManagementSystem.Models.Enrollment
+
+@{
+    string role = User.IsInRole("Admin") ? "Admin" : "Instructor";
+    ViewData["Title"] = $"Chỉnh sửa ghi danh - E-Learning System ({role})";
+    Layout = role == "Admin" ? "_AdminLayout" : "_InstructorLayout";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header @(role == "Admin" ? "bg-primary text-white" : "bg-gradient-primary-to-secondary")">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 @(role == "Instructor" ? "text-center font-weight-bold my-2 text-white" : "")">
+                            <i class="fas fa-edit me-2"></i>Chỉnh sửa ghi danh
+                        </h4>
+                        <a asp-action="ManageEnrollments" asp-controller="Enrollment" class="btn @(role == "Admin" ? "btn-light" : "btn-outline-secondary") btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i>Quay lại
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Thông báo -->
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <div class="flex-grow-1">@TempData["Success"]</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <div class="flex-grow-1">@TempData["Error"]</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (ViewData.ModelState != null && ViewData.ModelState.Values.SelectMany(v => v.Errors).Any())
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Có lỗi xảy ra:</strong>
+                            <ul class="mb-0 mt-2">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (ViewBag.NoAvailableCourse == true)
+                    {
+                        <div class="alert alert-warning mt-2">
+                            <i class="fas fa-exclamation-circle me-1"></i>Không còn khóa học nào để chọn!
+                        </div>
+                    }
+
+                    <form asp-action="EditEnrollment" asp-controller="Enrollment" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="EnrollmentId" />
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" value="@Model.User?.FullName" readonly />
+                                    <input type="hidden" asp-for="UserName" />
+                                    <label asp-for="UserName">Tên người dùng</label>
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    @if (ViewBag.NoAvailableCourse == true)
+                                    {
+                                        <input type="text" class="form-control" value="@Model.Course?.CourseName" readonly />
+                                        <input type="hidden" asp-for="CourseId" />
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="CourseId" class="form-select" asp-items="@ViewBag.Courses" id="course-selector">
+                                        </select>
+                                    }
+                                    <label asp-for="CourseId">Khóa học</label>
+                                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="EnrollmentDate" class="form-control" readonly />
+                                    <label asp-for="EnrollmentDate">Ngày ghi danh</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a asp-action="ManageEnrollments" asp-controller="Enrollment" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-times me-1"></i>Hủy
+                            </a>
+                            <button type="submit" class="btn @(role == "Instructor" ? "btn-success" : "btn-primary")">
+                                <i class="fas fa-save me-1"></i>Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small text-muted">
+                        <i class="fas fa-info-circle me-1"></i>Học viên sẽ nhận được thông báo khi thông tin ghi danh thay đổi
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Enrollment/EditEnrollment.js"></script>
+}

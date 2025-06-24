@@ -1,0 +1,85 @@
+@model IEnumerable<LearningManagementSystem.Models.ViewModels.MyLearningViewModel>
+@{
+    ViewData["Title"] = "Khóa học của tôi";
+    Layout = "_Layout";
+}
+
+<link href="~/css/Account/MyLearning.css" rel="stylesheet" />
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="section-title">Khóa học của tôi</h2>
+            <p class="text-muted">Tiếp tục học tập từ nơi bạn đã dừng lại</p>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Bạn chưa tham gia khóa học nào.
+                    <a href="@Url.Action("Index", "Search")" class="alert-link">Khám phá các khóa học ngay</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var course in Model)
+            {
+                string progressBarClass;
+                if (course.Progress >= 80)
+                {
+                    progressBarClass = "progress-bar bg-success text-white"; // xanh lá
+                }
+                else if (course.Progress >= 50)
+                {
+                    progressBarClass = "progress-bar bg-warning text-dark"; // vàng
+                }
+                else
+                {
+                    progressBarClass = "progress-bar bg-danger text-white"; // đỏ
+                }
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="course-card h-100">
+                        <div class="course-image">
+                            <img src="@(string.IsNullOrEmpty(course.ImageUrl) ? "/images/default-course.jpg" : course.ImageUrl)"
+                                 alt="@course.CourseName" class="img-fluid w-100" />
+                            <div class="progress-overlay">
+                                <div class="progress">
+                                    <div class="@progressBarClass d-flex align-items-center justify-content-center" role="progressbar"
+                                         style="width: @course.Progress%; font-weight: bold; font-size: 0.95rem; letter-spacing: 1px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 8px;"
+                                         aria-valuenow="@course.Progress"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                        @course.Progress%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-info">
+                            <h5 class="course-title">@course.CourseName</h5>
+                            <p class="course-description">@course.Description</p>
+                            <div class="course-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Đăng ký: @course.EnrollmentDate.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            </div>
+                            <div class="course-actions mt-3">
+                                <a href="@Url.Action("Details", "Course", new { id = course.CourseId })"
+                                   class="btn btn-primary w-100">
+                                    <i class="fas fa-play-circle me-2"></i>Tiếp tục học
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

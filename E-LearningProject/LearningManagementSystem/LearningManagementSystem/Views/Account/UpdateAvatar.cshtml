@@ -1,0 +1,146 @@
+﻿@model LearningManagementSystem.Models.ViewModels.UserProfileEditViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Cập nhật ảnh đại diện - E-Learning System";
+}
+
+<!-- Hidden form for anti-forgery token -->
+<form id="hiddenForm" style="display: none;">
+    <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+</form>
+
+<link href="~/css/Account/UpdateAvatar.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/js/Account/UpdateAvatar.js" defer></script>
+
+<div class="container">
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="header-content">
+                <div class="profile-image">
+                    @if (!string.IsNullOrEmpty(ViewBag.Avatar) && ViewBag.IsAvatarExists)
+                    {
+                        <img src="@ViewBag.Avatar" alt="Avatar">
+                    }
+                    else
+                    {
+                        <div class="profile-initial">
+                            @Model.UserName.First()
+                        </div>
+                    }
+                </div>
+                <div class="profile-info">
+                    <h2>@Model.FullName</h2>
+                    <p class="email">@Model.Email</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3 col-md-4">
+                    <div class="profile-nav">
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a href="@Url.Action("EditProfile", "Account")">
+                                        <i class="fas fa-user"></i>
+                                        <span>Hồ sơ</span>
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="@Url.Action("UpdateAvatar", "Account")">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Ảnh</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ChangePassword", "Account")">
+                                        <i class="fas fa-lock"></i>
+                                        <span>Đổi mật khẩu</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <form id="deleteAccountForm" asp-action="DeleteAccount" asp-controller="Account" method="post">
+                                        <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+                                        <button type="button" onclick="confirmDelete()">
+                                            <i class="fas fa-user-slash"></i>
+                                            <span>Đóng tài khoản</span>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-lg-9 col-md-8">
+                    <div class="content-card">
+                        <!-- Notifications -->
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="notification success">
+                                <i class="fas fa-check-circle"></i>
+                                @TempData["Success"]
+                                <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+                            </div>
+                        }
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="notification error">
+                                <i class="fas fa-exclamation-circle"></i>
+                                @TempData["Error"]
+                                <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+                            </div>
+                        }
+
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>Cập nhật ảnh đại diện</h3>
+                                <p>Thay đổi ảnh đại diện của bạn</p>
+                            </div>
+
+                            <!-- Avatar Update Form -->
+                            <form asp-action="UpdateAvatar" asp-controller="Account" method="post" enctype="multipart/form-data" class="profile-form">
+                                <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+
+                                <div class="form-group">
+                                    <label>Ảnh đại diện hiện tại</label>
+                                    <div class="current-avatar">
+                                        @if (!string.IsNullOrEmpty(ViewBag.Avatar) && ViewBag.IsAvatarExists)
+                                        {
+                                            <img src="@ViewBag.Avatar" alt="Avatar">
+                                        }
+                                        else
+                                        {
+                                            <div class="no-avatar">
+                                                <i class="fas fa-user"></i>
+                                                <p>Không có ảnh đại diện</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="avatarFile">Thay đổi ảnh đại diện (tối đa 5MB)</label>
+                                    <div class="file-upload">
+                                        <input type="file" name="avatarFile" id="avatarFile" class="form-control" accept="image/*" required />
+                                        <p class="file-info">Chưa có tệp nào được chọn</p>
+                                    </div>
+                                    @if (ViewData.ModelState.ContainsKey("avatarFile"))
+                                    {
+                                        <span class="text-danger">@ViewData.ModelState["avatarFile"].Errors.FirstOrDefault()?.ErrorMessage</span>
+                                    }
+                                </div>
+
+                                <button type="submit" class="btn-save">Cập nhật ảnh</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

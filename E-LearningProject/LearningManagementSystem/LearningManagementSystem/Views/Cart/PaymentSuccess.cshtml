@@ -1,0 +1,131 @@
+﻿@model LearningManagementSystem.Models.ViewModels.PaymentDetailViewModel
+@{
+    ViewData["Title"] = "Thanh toán thành công";
+}
+
+<div class="payment-success-container">
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <!-- Success Animation -->
+                <div class="success-animation">
+                    <div class="success-checkmark">
+                        <div class="check-icon">
+                            <span class="icon-line line-tip"></span>
+                            <span class="icon-line line-long"></span>
+                            <div class="icon-circle"></div>
+                            <div class="icon-fix"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Card -->
+                <div class="success-card">
+                    <div class="card-header-custom">
+                        <div class="graduation-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h1 class="success-title">Thanh toán thành công!</h1>
+                        <p class="success-subtitle">Chúc mừng bạn đã đăng ký khóa học thành công</p>
+                    </div>
+
+                    <div class="card-body-custom">
+                        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                        {
+                            <div class="alert alert-success custom-alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                @Model.SuccessMessage
+                            </div>
+                        }
+
+                        <!-- Payment Details -->
+                        <div class="payment-details">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <label>Mã giao dịch</label>
+                                    <span class="detail-value">#@Model.Payment.PaymentId</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <label>Ngày thanh toán</label>
+                                    <span class="detail-value">@Model.Payment.PaymentDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            </div>
+
+                            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                            {
+                                <div class="detail-item full-width">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-book-open"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <label>Khóa học đã mua</label>
+                                        <div class="course-list">
+                                            @foreach (var item in Model.OrderDetails)
+                                            {
+                                                <div class="course-item">
+                                                    <div class="course-info">
+                                                        <i class="fas fa-play-circle course-icon"></i>
+                                                        <span class="course-name">@item.Course?.CourseName</span>
+                                                    </div>
+                                                    <span class="course-price">₫@item.Price.ToString("N0")</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="detail-item total-amount">
+                                <div class="detail-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <label>Tổng số tiền</label>
+                                    <span class="detail-value amount">₫@Model.Payment.Amount.ToString("N0")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <a href="@Url.Action("MyLearning", "Account")" class="btn btn-primary-custom">
+                                <i class="fas fa-play me-2"></i>
+                                Bắt đầu học ngay
+                            </a>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary-custom">
+                                <i class="fas fa-home me-2"></i>
+                                Trở về trang chủ
+                            </a>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="additional-info">
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email xác nhận đã được gửi đến hộp thư của bạn</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-support"></i>
+                                <span>Cần hỗ trợ? Liên hệ với chúng tôi qua hotline hoặc chat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Cart/PaymentSuccess.css" />
+}
+}

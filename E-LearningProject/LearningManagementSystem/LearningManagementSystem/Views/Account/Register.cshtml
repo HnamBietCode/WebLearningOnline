@@ -1,0 +1,148 @@
+﻿
+@{
+    Layout = null;
+    ViewData["Title"] = "Đăng ký - E-Learning System";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="@Url.Content("~/css/Account/Register.css")" rel="stylesheet" />
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-background"></div>
+
+    <!-- Floating Educational Icons -->
+    <div class="floating-icons">
+        <i class="bi bi-book floating-icon"></i>
+        <i class="bi bi-mortarboard floating-icon"></i>
+        <i class="bi bi-laptop floating-icon"></i>
+        <i class="bi bi-lightbulb floating-icon"></i>
+        <i class="bi bi-journal-text floating-icon"></i>
+        <i class="bi bi-award floating-icon"></i>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="brand-icon">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <h1 class="auth-title">Tạo tài khoản mới</h1>
+                <p class="auth-subtitle">Bắt đầu hành trình học tập của bạn</p>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert-modern alert-success">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    @TempData["Success"]
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert-modern alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @TempData["Error"]
+                </div>
+            }
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert-modern alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p class="mb-0">@error.ErrorMessage</p>
+                    }
+                </div>
+            }
+
+            <form asp-action="Register" asp-controller="Account" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="FullName" class="form-label">
+                        <i class="bi bi-person"></i>
+                        Họ và tên
+                    </label>
+                    <input type="text" name="FullName" id="FullName" class="form-control" placeholder="Nhập họ và tên" required />
+                </div>
+                <div class="form-group">
+                    <label for="Email" class="form-label">
+                        <i class="bi bi-envelope"></i>
+                        Email
+                    </label>
+                    <input type="email" name="Email" id="Email" class="form-control" placeholder="Nhập email" required />
+                </div>
+                <div class="form-group">
+                    <label for="UserName" class="form-label">
+                        <i class="bi bi-person-badge"></i>
+                        Tên đăng nhập
+                    </label>
+                    <input type="text" name="UserName" id="UserName" class="form-control" placeholder="Tên đăng nhập" required />
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="bi bi-shield-lock"></i>
+                        Mật khẩu
+                    </label>
+                    <div class="password-field">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Mật khẩu" required />
+                        <span class="toggle-password" data-target="password">
+                            <i class="bi bi-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">
+                        <i class="bi bi-shield-check"></i>
+                        Xác nhận mật khẩu
+                    </label>
+                    <div class="password-field">
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="Xác nhận mật khẩu" required />
+                        <span class="toggle-password" data-target="confirmPassword">
+                            <i class="bi bi-eye"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-modern btn-primary-modern">
+                    <i class="bi bi-person-plus"></i>
+                    Đăng ký ngay
+                </button>
+
+                <div class="divider">
+                    <span>Hoặc tiếp tục với</span>
+                </div>
+
+                <a href="@Url.Action("ExternalLogin", "Account", new { provider = "Google", returnUrl = Context.Request.Query["returnUrl"] })" class="btn-modern btn-google">
+                    <i class="bi bi-google"></i>
+                    Đăng ký bằng Google
+                </a>
+
+                <div class="text-center mb-3">
+                    <span class="text-secondary">Đã có tài khoản? </span>
+                    <a href="@Url.Action("Login", "Account")" class="text-link">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập
+                    </a>
+                </div>
+
+                <div class="terms">
+                    Bằng việc đăng ký, bạn đồng ý với
+                    <a href="#" class="text-link">Điều khoản sử dụng</a> và
+                    <a href="#" class="text-link">Chính sách bảo mật</a>.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="@Url.Content("~/js/Account/Register.js")"></script>
+</body>
+</html>

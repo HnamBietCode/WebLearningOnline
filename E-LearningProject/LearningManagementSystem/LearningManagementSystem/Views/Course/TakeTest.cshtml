@@ -1,0 +1,135 @@
+﻿@model LearningManagementSystem.Models.ViewModels.TakeTestViewModel
+@{
+    ViewData["Title"] = "Làm bài kiểm tra - @Model.AssignmentTitle";
+    Layout = "_Layout";
+}
+
+<!-- Hidden form for anti-forgery token -->
+<form id="hiddenForm" style="display: none;">
+    <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+</form>
+
+<div class="test-container">
+    <div class="test-card">
+        <div class="test-header">
+            <h1 class="test-title">@Model.AssignmentTitle</h1>
+            <div class="timer-badge">
+                <i class="fas fa-clock"></i>
+                <span id="timer">00:00</span>
+            </div>
+        </div>
+
+        <div class="test-content">
+            <div class="row">
+                <div class="col-lg-9">
+                    <form id="testForm" asp-action="AutoSubmitTest" asp-controller="Assignment" method="post" class="test-form">
+                        <input type="hidden" name="assignmentId" value="@Model.AssignmentId" />
+                        <input type="hidden" name="CourseId" value="@Model.CourseId" />
+                        <input type="hidden" name="AssignmentTitle" value="@Model.AssignmentTitle" />
+                        <input type="hidden" name="DurationInMinutes" value="@Model.DurationInMinutes" />
+                        <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+
+                        <div class="question-list">
+                            @for (int i = 0; i < Model.Questions.Count; i++)
+                            {
+                                var question = Model.Questions[i];
+                                <div class="question-card">
+                                    <div class="question-header">
+                                        <div class="question-number">@(i + 1)</div>
+                                        <div class="question-content">
+                                            <h3 class="question-text">@question.QuestionText</h3>
+                                            <div class="question-meta">
+                                                <span class="question-points">
+                                                    <i class="fas fa-star"></i> Điểm tối đa: @(question.MaxScore ?? 0)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="answer-section">
+                                        @if (question.QuestionType == "MultipleChoice" && question.Options?.Any() == true)
+                                        {
+                                            <div class="options-grid">
+                                                @foreach (var option in question.Options)
+                                                {
+                                                    <div class="option-item">
+                                                        <input class="option-input question-input" type="radio"
+                                                               id="option-@option.OptionId"
+                                                               name="SelectedAnswers[@question.QuestionId]"
+                                                               value="@option.OptionId" required>
+                                                        <label class="option-label" for="option-@option.OptionId">
+                                                            <span class="option-marker">@option.OptionLabel</span>
+                                                            <span class="option-text">@option.OptionText</span>
+                                                        </label>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else if (question.QuestionType == "Essay")
+                                        {
+                                            <div class="essay-answer">
+                                                <textarea class="form-control question-input"
+                                                          name="SelectedAnswers[@question.QuestionId]"
+                                                          rows="4"
+                                                          placeholder="Nhập câu trả lời của bạn..." required></textarea>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" id="submitButton" class="btn-submit">
+                                <i class="fas fa-paper-plane"></i> Nộp bài
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-3">
+                    <div class="sidebar">
+                        <div class="time-display">
+                            <h3 class="sidebar-title">Thời gian còn lại</h3>
+                            <div class="time-circle">
+                                <span id="timer-display">00:00</span>
+                            </div>
+                        </div>
+
+                        <div class="test-progress">
+                            <h3 class="sidebar-title">Tiến độ bài làm</h3>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="progressBar"></div>
+                            </div>
+                            <div class="progress-stats">
+                                <span id="completedQuestions">0</span>/<span id="totalQuestions">@Model.Questions.Count</span> câu hỏi
+                            </div>
+                        </div>
+
+                        <div class="test-navigation">
+                            <h3 class="sidebar-title">Điều hướng</h3>
+                            <div class="question-navigation" id="navigationButtons">
+                                @for (int i = 0; i < Model.Questions.Count; i++)
+                                {
+                                    <button type="button" class="nav-button" data-question="@i">@(i + 1)</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Course/TakeTest.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Course/TakeTest.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Initialize the test with parameters from the model
+        initializeTest(@Model.DurationInMinutes, @Model.Questions.Count, '@Url.Action("AllTests", "Course", new { id = Model.CourseId })');
+    </script>
+}

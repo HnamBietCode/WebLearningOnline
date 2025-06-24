@@ -1,0 +1,1262 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @RenderSection("Styles", required: false)
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary: #2d3748;
+            --accent: #00c9a7;
+            --light: #f8fafc;
+            --dark: #1a202c;
+            --gray-100: #f7fafc;
+            --gray-200: #edf2f7;
+            --gray-300: #e2e8f0;
+            --gray-400: #cbd5e0;
+            --gray-500: #a0aec0;
+            --gray-600: #718096;
+            --gray-700: #4a5568;
+            --gray-800: #2d3748;
+            --gray-900: #1a202c;
+            --danger: #e53e3e;
+            --success: #38a169;
+            --warning: #f59e0b;
+            --info: #3498db;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            color: var(--gray-800);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            margin-top: 72px;
+            padding-bottom: 4rem;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: 72px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .navbar-scrolled {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+            .navbar-brand i {
+                color: var(--primary);
+                font-size: 1.75rem;
+            }
+
+        .navbar-nav {
+            flex-grow: 0 !important;
+            margin-right: 1rem;
+        }
+
+        .nav-link {
+            color: var(--gray-700) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin: 0 0.25rem;
+        }
+
+            .nav-link:hover {
+                color: var(--primary) !important;
+                background-color: rgba(67, 97, 238, 0.05);
+            }
+
+            .nav-link.active {
+                color: var(--primary) !important;
+                background-color: rgba(67, 97, 238, 0.1);
+                font-weight: 600;
+            }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 1rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 100%;
+        }
+
+            .search-bar .form-control {
+                border-radius: 12px;
+                border: 1px solid var(--gray-300);
+                padding: 0.75rem 1rem 0.75rem 3rem;
+                font-size: 0.95rem;
+                font-weight: 400;
+                transition: all 0.3s ease;
+                background-color: var(--gray-100);
+                width: 100%;
+            }
+
+                .search-bar .form-control:focus {
+                    border-color: var(--primary);
+                    background-color: #ffffff;
+                    box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+                }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar .form-control:focus + .search-icon {
+            color: var(--primary);
+        }
+
+        .search-bar .btn-search {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.4rem 0.75rem;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .search-bar .btn-search:hover {
+                background-color: var(--primary-hover);
+                transform: translateY(-50%) scale(1.05);
+            }
+
+        /* Gợi ý tìm kiếm */
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .search-suggestion-item {
+            padding: 0.75rem 1.25rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+            .search-suggestion-item:hover {
+                background-color: rgba(67, 97, 238, 0.05);
+                color: var(--primary);
+            }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .action-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: var(--gray-700);
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+            .action-icon:hover {
+                color: var(--primary);
+                background-color: rgba(67, 97, 238, 0.1);
+            }
+
+        .badge-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 600;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .btn-auth {
+            padding: 0.6rem 1.25rem;
+            font-weight: 500;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+            .btn-login:hover {
+                background-color: var(--gray-200);
+                border-color: var(--gray-400);
+                transform: translateY(-2px);
+            }
+
+        .btn-register {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+            .btn-register:hover {
+                background-color: var(--primary-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            }
+
+        .avatar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.3rem 0.3rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+            .avatar-wrapper:hover {
+                background-color: rgba(67, 97, 238, 0.05);
+            }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+            .avatar:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.2);
+            }
+
+        .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            padding: 1rem 0;
+            min-width: 260px;
+            margin-top: 0.75rem;
+            animation: fadeInDown 0.3s ease forwards;
+        }
+
+        @@keyframes fadeInDown {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+            .dropdown-item:hover {
+                background-color: rgba(67, 97, 238, 0.05);
+                color: var(--primary) !important;
+            }
+
+            .dropdown-item i {
+                font-size: 1.1rem;
+                width: 20px;
+                text-align: center;
+                color: var(--gray-600);
+            }
+
+            .dropdown-item:hover i {
+                color: var(--primary);
+            }
+
+        .dropdown-divider {
+            margin: 0.5rem 0;
+            opacity: 0.1;
+        }
+
+        .dropdown-header {
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+            .cart-item:hover {
+                background-color: rgba(67, 97, 238, 0.02);
+            }
+
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .cart-item-title {
+            font-weight: 500;
+            color: var(--gray-800);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .cart-total {
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .cart-total-amount {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .btn-cart {
+            margin: 0 1.25rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+            width: calc(100% - 2.5rem);
+        }
+
+            .btn-cart:hover {
+                background-color: var(--primary-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            }
+
+        .notification-item {
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+
+            .notification-item:hover {
+                background-color: rgba(67, 97, 238, 0.05);
+            }
+
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .notification-icon {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            color: var(--gray-600);
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .notification-time {
+            color: var(--gray-500);
+            font-size: 0.75rem;
+        }
+
+        .notification-unread {
+            position: relative;
+        }
+
+            .notification-unread:before {
+                content: '';
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: var(--primary);
+                right: 1.25rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+        .btn-view-all {
+            margin: 0.75rem 1.25rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-align: center;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+            .btn-view-all:hover {
+                background-color: rgba(67, 97, 238, 0.1);
+            }
+
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        .empty-text {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .footer {
+            background-color: var(--secondary);
+            color: var(--gray-400);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+            .footer-logo i {
+                font-size: 2rem;
+                color: var(--primary);
+            }
+
+        .footer-logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .footer h5 {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+            .footer h5:after {
+                content: '';
+                position: absolute;
+                width: 50px;
+                height: 2px;
+                background-color: var(--primary);
+                bottom: 0;
+                left: 0;
+            }
+
+        .footer p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.75rem;
+            }
+
+            .footer-links a {
+                color: var(--gray-400);
+                text-decoration: none;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+                .footer-links a:hover {
+                    color: white;
+                    transform: translateX(5px);
+                }
+
+            .footer-links i {
+                color: var(--primary);
+                font-size: 0.9rem;
+            }
+
+        .footer-contact {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-contact-icon {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .footer-contact-info {
+            flex: 1;
+        }
+
+        .footer-contact-label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+            .social-icon:hover {
+                background-color: var(--primary);
+                transform: translateY(-5px);
+            }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+            margin-top: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
+        .footer-payment {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .payment-icon {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 0.5rem;
+            width: 50px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        @@media (max-width: 992px) {
+            .navbar
+
+        {
+            padding: 0.75rem 1rem;
+        }
+
+        .search-container {
+            position: static;
+            max-width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        .navbar-collapse {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            margin-top: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.75rem 1rem;
+        }
+
+        .user-actions {
+            margin-top: 1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .footer
+
+        {
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-col {
+            margin-bottom: 2rem;
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-payment {
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .search-container {
+            margin: 0.5rem 0;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .navbar-brand
+
+        {
+            font-size: 1.2rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.5rem;
+        }
+
+        .btn-auth {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1.1rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+        }
+
+        .search-container {
+            margin: 0.5rem 0;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    @using Microsoft.EntityFrameworkCore
+    @using LearningManagementSystem.Data
+    @using LearningManagementSystem.Models
+    @using LearningManagementSystem.Repositories
+    @inject LMSContext _context
+    @inject INotificationRepository _notificationRepository
+
+    @{
+        int cartCount = 0;
+        List<CartItem> cartItems = new List<CartItem>();
+        decimal totalPrice = 0;
+        List<Notification> notifications = new List<Notification>();
+        string avatarUrl = "/images/default-user.jpg";
+
+        if (User.Identity.IsAuthenticated)
+        {
+            var userName = User.Identity.Name;
+
+            if (!string.IsNullOrEmpty(userName))
+            {
+                var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.UserName == userName) ??
+                await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == userName);
+
+                if (user != null)
+                {
+                    avatarUrl = !string.IsNullOrEmpty(user.Avatar) && user.Avatar.StartsWith("/")
+                    ? user.Avatar
+                    : $"/images/{user.Avatar}";
+                }
+
+                // Lấy Cart của người dùng
+                var cart = await _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Course)
+                .FirstOrDefaultAsync(c => c.UserName == userName);
+
+                if (cart != null)
+                {
+                    cartItems = cart.CartItems.ToList();
+                    cartCount = cartItems.Count;
+                    totalPrice = cartItems.Sum(ci => ci.Course.Price ?? 0);
+                }
+
+                try
+                {
+                    notifications = await _notificationRepository.GetByUserNameAsync(userName) ?? new List<Notification>();
+                }
+                catch (Exception)
+                {
+                    notifications = new List<Notification>();
+                }
+                ViewBag.UnreadCount = notifications.Count(n => !n.IsRead);
+                ViewBag.Notifications = notifications.OrderByDescending(n => n.CreatedDate).Take(5).ToList();
+            }
+        }
+        else
+        {
+            ViewBag.UnreadCount = 0;
+            ViewBag.Notifications = new List<Notification>();
+        }
+    }
+
+    <div class="app-container">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>E-Learning</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Search/Index" id="exploreCoursesLink">Khóa học</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Dashboard", "Admin")">
+                                    <i class="bi bi-speedometer2 me-1"></i> Dashboard Admin
+                                </a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && (User.IsInRole("Instructor")))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Dashboard", "Instructor")">
+                                    <i class="bi bi-briefcase me-1"></i> Dashboard Instructor
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="search-container flex-grow-1 mx-3">
+                        <form id="searchForm" class="search-bar w-100" asp-controller="Search" asp-action="Index" method="get">
+                            <input id="searchInput" class="form-control" type="search" name="query" placeholder="Tìm kiếm khóa học..." aria-label="Search" autocomplete="off" />
+                            <i class="bi bi-search search-icon"></i>
+                            <button id="searchButton" class="btn btn-search" type="submit">Tìm</button>
+                        </form>
+                        <div id="searchSuggestions" class="search-suggestions"></div>
+                    </div>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="user-actions d-flex align-items-center">
+                            <div class="dropdown">
+                                <button class="action-icon" type="button" id="cartDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-cart"></i>
+                                    @if (cartCount > 0)
+                                    {
+                                        <span id="cartCount" class="badge-counter">@cartCount</span>
+                                    }
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown" style="width: 320px;">
+                                    <div class="dropdown-header">Giỏ hàng</div>
+                                    @if (cartItems.Any())
+                                    {
+                                        foreach (var item in cartItems)
+                                        {
+                                            <div class="cart-item">
+                                                <img class="cart-item-img" src="@(string.IsNullOrEmpty(item.Course.ImageUrl) ? "/images/default-course.jpg" : item.Course.ImageUrl)" alt="@item.Course.CourseName" />
+                                                <div>
+                                                    <div class="cart-item-title">@item.Course.CourseName</div>
+                                                    <div class="cart-item-price">₫@item.Course.Price?.ToString("N0")</div>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="cart-total">
+                                            <span>Tổng cộng:</span>
+                                            <span class="cart-total-amount">₫@totalPrice.ToString("N0")</span>
+                                        </div>
+                                        <a href="@Url.Action("Index", "Cart")" class="btn-cart">Xem giỏ hàng</a>
+                                    }
+                                    else
+                                    {
+                                        <div class="empty-state">
+                                            <i class="bi bi-cart-x empty-icon"></i>
+                                            <p class="empty-text">Giỏ hàng trống</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="dropdown">
+                                <button class="action-icon" type="button" id="notificationBell" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-bell"></i>
+                                    @if (ViewBag.UnreadCount > 0)
+                                    {
+                                        <span class="badge-counter">@ViewBag.UnreadCount</span>
+                                    }
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationBell" style="width: 360px; max-height: 480px; overflow-y: auto;">
+                                    <div class="dropdown-header">Thông báo</div>
+                                    @{
+                                        var notificationsList = ViewBag.Notifications as List<Notification>;
+                                        if (notificationsList != null && notificationsList.Any())
+                                        {
+                                            foreach (var notification in notificationsList)
+                                            {
+                                                <div class="notification-item @(notification.IsRead ? "" : "notification-unread")">
+                                                    <div class="notification-content">
+                                                        <div class="notification-icon">
+                                                            <i class="bi bi-bell"></i>
+                                                        </div>
+                                                        <div class="notification-text">
+                                                            <div class="notification-title">@notification.Title</div>
+                                                            <div class="notification-message">@notification.Content</div>
+                                                            <div class="notification-time">@notification.CreatedDate.ToString("dd/MM/yyyy HH:mm")</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <a href="@Url.Action("Index", "Notification")" class="btn-view-all">Xem tất cả thông báo</a>
+                                        }
+                                        else
+                                        {
+                                            <div class="empty-state">
+                                                <i class="bi bi-bell-slash empty-icon"></i>
+                                                <p class="empty-text">Không có thông báo mới</p>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="dropdown">
+                                <div class="avatar-wrapper" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="@avatarUrl" alt="User Avatar" class="avatar" />
+                                </div>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("EditProfile", "Account")"><i class="bi bi-person"></i> Thông tin cá nhân</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("History", "Payment")"><i class="bi bi-receipt"></i> Lịch sử mua hàng</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("MyLearning", "Account")"><i class="bi bi-book"></i> Khóa học của tôi</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("AllTests", "Course")"><i class="bi bi-file-earmark-text"></i> Xem tất cả bài kiểm tra</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="user-actions d-flex gap-2">
+                            <a class="btn btn-login btn-auth" href="@Url.Action("Login", "Account")">
+                                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                            </a>
+                            <a class="btn btn-register btn-auth" href="@Url.Action("Register", "Account")">
+                                <i class="bi bi-person-plus"></i> Đăng ký
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </nav>
+
+        <main role="main">
+            @RenderBody()
+        </main>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 footer-col">
+                        <div class="footer-logo">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span class="footer-logo-text">E-Learning</span>
+                        </div>
+                        <p>Hệ thống đào tạo trực tuyến hàng đầu với các khóa học chất lượng cao, đa dạng lĩnh vực, giúp bạn phát triển kỹ năng và kiến thức một cách hiệu quả.</p>
+                        <div class="footer-social">
+                            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 footer-col">
+                        <h5>Khám phá</h5>
+                        <ul class="footer-links">
+                            <li><a href="/"><i class="bi bi-chevron-right"></i> Trang chủ</a></li>
+                            <li><a href="/Search/Index"><i class="bi bi-chevron-right"></i> Khóa học</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Giáo viên</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Blog</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Về chúng tôi</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 footer-col">
+                        <h5>Danh mục</h5>
+                        <ul class="footer-links">
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Công nghệ thông tin</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Kinh doanh</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Ngoại ngữ</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Marketing</a></li>
+                            <li><a href="#"><i class="bi bi-chevron-right"></i> Phát triển cá nhân</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-6 footer-col">
+                        <h5>Liên hệ</h5>
+                        <div class="footer-contact">
+                            <div class="footer-contact-icon"><i class="bi bi-geo-alt"></i></div>
+                            <div class="footer-contact-info">
+                                <div class="footer-contact-label">Địa chỉ</div>
+                                <p>Số 123 Đường ABC, Quận 1, TP. Hồ Chí Minh, Việt Nam</p>
+                            </div>
+                        </div>
+                        <div class="footer-contact">
+                            <div class="footer-contact-icon"><i class="bi bi-envelope"></i></div>
+                            <div class="footer-contact-info">
+                                <div class="footer-contact-label">Email</div>
+                                <p>support@elearning.com</p>
+                            </div>
+                        </div>
+                        <div class="footer-contact">
+                            <div class="footer-contact-icon"><i class="bi bi-telephone"></i></div>
+                            <div class="footer-contact-info">
+                                <div class="footer-contact-label">Điện thoại</div>
+                                <p>+84 123 456 789</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-copyright">
+                        © @DateTime.Now.Year E-Learning. Tất cả các quyền được bảo lưu.
+                    </div>
+                    <div class="footer-payment">
+                        <div class="payment-icon"><i class="fab fa-cc-visa"></i></div>
+                        <div class="payment-icon"><i class="fab fa-cc-mastercard"></i></div>
+                        <div class="payment-icon"><i class="fab fa-cc-paypal"></i></div>
+                        <div class="payment-icon"><i class="fab fa-cc-apple-pay"></i></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 10) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+
+        const exploreCoursesLink = document.getElementById('exploreCoursesLink');
+        if (exploreCoursesLink) {
+            exploreCoursesLink.addEventListener('click', function (e) {
+                if (window.location.pathname === '/Search/Index') {
+                    e.preventDefault();
+                    const courseList = document.getElementById('course-list');
+                    if (courseList) {
+                        courseList.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('searchInput');
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            const searchForm = document.getElementById('searchForm');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    const query = this.value.trim();
+                    if (query.length > 0) {
+                        fetch(`/Search/GetSearchSuggestions?query=${encodeURIComponent(query)}`)
+                            .then(response => response.json())
+                            .then(suggestions => {
+                                searchSuggestions.innerHTML = '';
+                                if (suggestions.length > 0) {
+                                    suggestions.forEach(suggestion => {
+                                        const item = document.createElement('div');
+                                        item.className = 'search-suggestion-item';
+                                        item.textContent = suggestion;
+                                        item.addEventListener('click', function () {
+                                            searchInput.value = suggestion;
+                                            searchSuggestions.style.display = 'none';
+                                            searchForm.submit();
+                                        });
+                                        searchSuggestions.appendChild(item);
+                                    });
+                                    searchSuggestions.style.display = 'block';
+                                } else {
+                                    searchSuggestions.style.display = 'none';
+                                }
+                            })
+                            .catch(error => console.error('Error fetching suggestions:', error));
+                    } else {
+                        searchSuggestions.style.display = 'none';
+                    }
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                        searchSuggestions.style.display = 'none';
+                    }
+                });
+
+                searchInput.addEventListener('focus', function () {
+                    if (searchInput.value.trim().length > 0) {
+                        searchSuggestions.style.display = 'block';
+                    }
+                });
+            }
+
+            if (searchForm) {
+                searchForm.addEventListener('submit', function (e) {
+                    const searchInput = document.getElementById('searchInput').value.trim();
+                    if (!searchInput) {
+                        e.preventDefault();
+                        const toastContainer = document.createElement('div');
+                        toastContainer.style.position = 'fixed';
+                        toastContainer.style.top = '20px';
+                        toastContainer.style.right = '20px';
+                        toastContainer.style.zIndex = '10000';
+
+                        const toast = document.createElement('div');
+                        toast.className = 'toast show';
+                        toast.setAttribute('role', 'alert');
+                        toast.setAttribute('aria-live', 'assertive');
+                        toast.setAttribute('aria-atomic', 'true');
+                        toast.style.backgroundColor = 'white';
+                        toast.style.color = '#2d3748';
+                        toast.style.borderRadius = '8px';
+                        toast.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                        toast.style.minWidth = '300px';
+
+                        toast.innerHTML = `
+                            <div class="toast-header">
+                                <strong class="me-auto" style="color: #e53e3e;"><i class="bi bi-exclamation-circle me-2"></i>Lỗi</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" onclick="this.parentElement.parentElement.parentElement.remove()"></button>
+                            </div>
+                            <div class="toast-body">
+                                Vui lòng nhập từ khóa tìm kiếm!
+                            </div>
+                        `;
+
+                        toastContainer.appendChild(toast);
+                        document.body.appendChild(toastContainer);
+
+                        setTimeout(() => {
+                            toastContainer.remove();
+                        }, 3000);
+                    }
+                });
+            }
+
+            window.addEventListener('load', function () {
+                if (window.location.pathname === '/Search/Index') {
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+
+                    const courseList = document.getElementById('course-list');
+                    if (courseList) {
+                        courseList.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,169 @@
+﻿@model LearningManagementSystem.Models.Lesson
+
+@{
+    string role = User.IsInRole("Admin") ? "Admin" : "Instructor";
+    ViewData["Title"] = $"Chỉnh sửa bài học - E-Learning System ({role})";
+    Layout = role == "Admin" ? "_AdminLayout" : "_InstructorLayout";
+}
+
+<div class="container-fluid py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-gradient-primary">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="text-dark mb-0 fw-bold">Chỉnh sửa bài học</h3>
+                @if (!string.IsNullOrEmpty(Model.CourseId))
+                {
+                    <a asp-controller="Lesson" asp-action="ManageLessons" asp-route-courseId="@Model.CourseId"
+                       class="btn btn-light">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách bài học
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="@role" asp-action="ManageCourses"
+                       class="btn btn-light">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách khóa học
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <!-- Thông báo -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div class="d-flex">
+                        <div class="me-2">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Thành công!</strong> @TempData["Success"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="d-flex">
+                        <div class="me-2">
+                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                        </div>
+                        <div>
+                            <strong>Lỗi!</strong> @TempData["Error"]
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-controller="Lesson" asp-action="EditLesson" asp-route-lessonId="@Model.LessonId"
+                  method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Thông tin bài học</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-heading me-1"></i> Tiêu đề bài học
+                                    </label>
+                                    <input name="LessonTitle" class="form-control form-control-lg"
+                                           value="@(TempData["LessonTitle"] ?? Model.LessonTitle)" required />
+                                    <span asp-validation-for="LessonTitle" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-align-left me-1"></i> Nội dung
+                                    </label>
+                                    <textarea name="Content" class="form-control" id="lessonContent" rows="8">@(TempData["Content"] ?? Model.Content)</textarea>
+                                    <span asp-validation-for="Content" class="text-danger"></span>
+                                    <small class="text-muted">Mô tả chi tiết về nội dung bài học này</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-sort-numeric-down me-1"></i> Số thứ tự
+                                    </label>
+                                    <input name="OrderNumber" class="form-control" type="number"
+                                           value="@(TempData["OrderNumber"] ?? Model.OrderNumber.ToString())" required disabled />
+                                    <span asp-validation-for="OrderNumber" class="text-danger"></span>
+                                    <small class="text-muted">Vị trí xuất hiện của bài học trong khóa học</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-video me-1"></i> Video bài học
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="video-preview mb-3">
+                                    <label class="form-label fw-bold">Video hiện tại</label>
+                                    @if (!string.IsNullOrEmpty(Model.VideoUrl))
+                                    {
+                                        <div class="ratio ratio-16x9 mb-2">
+                                            <video controls>
+                                                <source src="@Model.VideoUrl" type="video/mp4">
+                                                Trình duyệt của bạn không hỗ trợ thẻ video.
+                                            </video>
+                                        </div>
+                                        <div class="text-center text-muted small mb-3">
+                                            <i class="fas fa-info-circle me-1"></i> Video hiện tại sẽ bị thay thế nếu bạn tải lên video mới
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center py-5 bg-light rounded mb-3">
+                                            <i class="fas fa-film fa-3x text-muted mb-2"></i>
+                                            <p class="text-muted">Chưa có video cho bài học này</p>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Thay đổi video</label>
+                                    <div class="input-group mb-1">
+                                        <input type="file" name="videoFile" class="form-control" accept="video/*"
+                                               id="videoFileInput" />
+                                        <button class="btn btn-outline-secondary" type="button" id="clearVideoBtn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    @if (ViewData.ModelState.ContainsKey("videoFile"))
+                                    {
+                                        <span class="text-danger">
+                                            @ViewData.ModelState["videoFile"].Errors.FirstOrDefault()?.ErrorMessage
+                                        </span>
+                                    }
+                                    <div class="text-muted small">
+                                        <i class="fas fa-info-circle me-1"></i> Kích thước tối đa: 500MB
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button id="btnSaveLesson" type="submit" class="btn btn-primary w-100" disabled>Lưu thay đổi</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Lesson/EditLesson.js"></script>
+}

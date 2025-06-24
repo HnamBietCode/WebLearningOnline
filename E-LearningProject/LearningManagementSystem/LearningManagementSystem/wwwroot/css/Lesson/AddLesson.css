@@ -1,0 +1,18 @@
+﻿/* Lesson Content Container */
+.lesson-content-container {
+    min-height: 150px;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    transition: border 0.3s ease;
+}
+
+    .lesson-content-container.border-primary {
+        border: 2px solid #0d6efd;
+    }
+
+/* Textarea Styles */
+#lessonContent {
+    resize: vertical;
+    background-color: #f8f9fa;
+    border: none;
+}

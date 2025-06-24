@@ -1,0 +1,218 @@
+﻿@model LearningManagementSystem.Models.ViewModels.ViewTestResultViewModel
+@{
+    ViewData["Title"] = "Kết quả bài kiểm tra - @Model.AssignmentTitle";
+    Layout = "_Layout";
+}
+
+<!-- Hidden form for anti-forgery token -->
+<form id="hiddenForm" style="display: none;">
+    <input type="hidden" name="__RequestVerificationToken" value="@(ViewData["__RequestVerificationToken"])" />
+</form>
+
+<div class="result-container">
+    <div class="result-card">
+        <div class="header-section">
+            <h1 class="section-title">@Model.AssignmentTitle</h1>
+            <div class="section-subtitle">Kết quả bài kiểm tra</div>
+        </div>
+
+        @if (Model.Questions == null || !Model.Questions.Any())
+        {
+            <div class="info-message">
+                <i class="fas fa-info-circle"></i> Không có câu hỏi nào để hiển thị kết quả.
+            </div>
+        }
+        else
+        {
+            <!-- Score Summary Card (At top) -->
+            <div class="score-summary-section">
+                @{
+                    // Tính toán điểm số
+                    double totalScore = 0;
+                    if (Model.Submissions != null && Model.Submissions.Any())
+                    {
+                        totalScore = Model.Submissions.Where(s => s.Score.HasValue).Sum(s => (double)s.Score.Value);
+                    }
+
+                    double maxTotalScore = 0;
+                    if (Model.Questions != null)
+                    {
+                        maxTotalScore = Model.Questions.Sum(q => q.MaxScore ?? 0);
+                    }
+
+                    double scorePercentage = 0;
+                    if (maxTotalScore > 0)
+                    {
+                        scorePercentage = (totalScore / maxTotalScore) * 100;
+                    }
+
+                    string scoreClass = "needs-improvement";
+                    if (scorePercentage >= 80)
+                    {
+                        scoreClass = "excellent";
+                    }
+                    else if (scorePercentage >= 60)
+                    {
+                        scoreClass = "good";
+                    }
+                    else if (scorePercentage >= 40)
+                    {
+                        scoreClass = "average";
+                    }
+                }
+
+                <div class="score-circle @scoreClass">
+                    <div class="score-text">@Math.Round(scorePercentage)%</div>
+                </div>
+                <div class="score-details">
+                    <div class="score-title">Điểm số</div>
+                    <div class="score-value">@totalScore / @maxTotalScore</div>
+                    <div class="score-status @scoreClass">
+                        @if (scorePercentage >= 80)
+                        {
+                            <span>Xuất sắc</span>
+                        }
+                        else if (scorePercentage >= 60)
+                        {
+                            <span>Tốt</span>
+                        }
+                        else if (scorePercentage >= 40)
+                        {
+                            <span>Trung bình</span>
+                        }
+                        else
+                        {
+                            <span>Cần cải thiện</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="questions-section">
+                <h2 class="questions-title">Chi tiết câu trả lời</h2>
+
+                @for (int i = 0; i < Model.Questions.Count; i++)
+                {
+                    var question = Model.Questions[i];
+                    var submission = Model.Submissions?.FirstOrDefault(s => s.QuestionId == question.QuestionId && s.UserName == User.Identity.Name);
+                    bool isCorrect = false;
+
+                    if (question.QuestionType == "MultipleChoice" && submission != null)
+                    {
+                        var selectedOption = question.Options?.FirstOrDefault(o => o.OptionLabel == submission.SelectedOptionLabel);
+                        isCorrect = selectedOption?.IsCorrect == true;
+                    }
+
+                    <div class="question-card @(isCorrect ? "correct" : "incorrect")">
+                        <div class="question-header">
+                            <div class="question-number">Câu @(i + 1)</div>
+                            <div class="question-type">
+                                @if (question.QuestionType == "MultipleChoice")
+                                {
+                                    <span class="tag multiple-choice">Trắc nghiệm</span>
+                                }
+                                else if (question.QuestionType == "Essay")
+                                {
+                                    <span class="tag essay">Tự luận</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="question-content">
+                            <div class="question-text">@question.QuestionText</div>
+
+                            @if (question.QuestionType == "MultipleChoice" && question.Options?.Any() == true)
+                            {
+                                <div class="options-list">
+                                    @foreach (var option in question.Options.OrderBy(o => o.OptionLabel))
+                                    {
+                                        var isSelected = submission?.SelectedOptionLabel == option.OptionLabel;
+                                        var optionClass = isSelected ? (option.IsCorrect ? "selected-correct" : "selected-incorrect") :
+                                        (option.IsCorrect ? "correct-answer" : "");
+
+                                        <div class="option-item @optionClass">
+                                            <div class="option-marker">
+                                                @if (isSelected)
+                                                {
+                                                    @if (option.IsCorrect)
+                                                    {
+                                                        <i class="fas fa-check-circle"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fas fa-times-circle"></i>
+                                                    }
+                                                }
+                                                else if (option.IsCorrect)
+                                                {
+                                                    <i class="fas fa-circle"></i>
+                                                }
+                                                else
+                                                {
+                                                    <span class="option-letter">@option.OptionLabel</span>
+                                                }
+                                            </div>
+                                            <div class="option-text">@option.OptionText</div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else if (question.QuestionType == "Essay")
+                            {
+                                <div class="essay-answer">
+                                    <div class="essay-header">Trả lời của bạn</div>
+                                    <div class="essay-content">
+                                        @if (!string.IsNullOrEmpty(submission?.SelectedOptionText))
+                                        {
+                                            @submission.SelectedOptionText
+                                        }
+                                        else
+                                        {
+                                            <span class="no-answer">Chưa có câu trả lời</span>
+                                        }
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(submission?.Feedback))
+                                    {
+                                        <div class="essay-feedback">
+                                            <div class="feedback-header">Nhận xét của giảng viên</div>
+                                            <div class="feedback-content">@submission.Feedback</div>
+                                        </div>
+                                    }
+
+                                    <div class="essay-score">
+                                        @if (submission?.Score.HasValue == true)
+                                        {
+                                            <div class="score-badge">
+                                                <span class="score-value">@submission.Score.Value</span>
+                                                <span class="score-max">/10</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="pending-score">
+                                                <i class="fas fa-clock"></i>
+                                                <span>Đang chờ chấm</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="action-section">
+                <a href="@Url.Action("AllTests", "Course", new { id = Model.CourseId })" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Quay lại danh sách bài kiểm tra</span>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Course/TakeTestResult.css" />
+}

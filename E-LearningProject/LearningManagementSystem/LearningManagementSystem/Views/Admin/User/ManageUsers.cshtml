@@ -1,0 +1,200 @@
+﻿@model IEnumerable<LearningManagementSystem.Models.User>
+
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid py-4">
+    <!-- Thông báo -->
+    <div class="notification-area mb-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert"
+                 style="border-radius: 8px; border-left: 6px solid #28a745; background-color: #f8fff9;">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert"
+                 style="border-radius: 8px; border-left: 6px solid #dc3545; background-color: #fff8f8;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- Card chính -->
+    <div class="card shadow border-0" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold" style="color: #2563eb;">
+                <i class="bi bi-person-check me-2"></i>Quản lý người dùng
+            </h5>
+            <a asp-action="CreateUser" asp-controller="Admin" asp-area=""
+               class="btn btn-primary" style="border-radius: 8px;">
+                <i class="bi bi-plus-lg me-1"></i> Thêm người dùng mới
+            </a>
+        </div>
+
+        <div class="card-body">
+            <!-- Tìm kiếm và bộ lọc -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control border-start-0"
+                               placeholder="Tìm kiếm tên người dùng..." style="border-radius: 0 8px 8px 0;">
+                    </div>
+                    <small class="text-muted mt-1">Tìm kiếm theo tên đăng nhập</small>
+                </div>
+            </div>
+
+            <!-- Bảng người dùng -->
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-person-x text-muted" style="font-size: 3rem;"></i>
+                    <p class="mt-3 text-muted">Không có người dùng nào trong hệ thống.</p>
+                    <a asp-action="CreateUser" asp-controller="Admin" asp-area="" class="btn btn-outline-primary mt-2">
+                        <i class="bi bi-plus-circle me-2"></i> Thêm người dùng đầu tiên
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr class="table-light">
+                                <th scope="col" class="username-column ps-3">Tên đăng nhập</th>
+                                <th scope="col" class="fullname-column">Họ tên</th>
+                                <th scope="col" class="email-column">Email</th>
+                                <th scope="col" class="role-column text-center">Vai trò</th>
+                                <th scope="col" class="bio-column">Bio</th>
+                                <th scope="col" class="avatar-column text-center">Avatar</th>
+                                <th scope="col" class="action-column text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr class="align-middle">
+                                    <td class="username-column fw-medium ps-3">@user.UserName</td>
+                                    <td class="fullname-column">@user.FullName</td>
+                                    <td class="email-column">
+                                        <span class="text-truncate d-inline-block" style="max-width: 200px;"
+                                              title="@user.Email">@user.Email</span>
+                                    </td>
+                                    <td class="role-column text-center">
+                                        @if (user.RoleId != null && user.Role != null)
+                                        {
+                                            <span class="badge role-badge bg-info text-dark bg-opacity-10">@user.Role.RoleName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge role-badge bg-secondary bg-opacity-10">Không xác định</span>
+                                        }
+                                    </td>
+                                    <td class="bio-column">
+                                        @if (!string.IsNullOrEmpty(user.Bio))
+                                        {
+                                            <span class="text-truncate d-inline-block" style="max-width: 150px;"
+                                                  title="@user.Bio">@user.Bio</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Không có</span>
+                                        }
+                                    </td>
+                                    <td class="avatar-column text-center align-middle">
+                                        <div class="avatar-user rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 45px; height: 45px; border: 2px solid #e5e7eb; background: #fff; overflow: hidden;">
+                                            @if (!string.IsNullOrEmpty(user.Avatar))
+                                            {
+                                                <img src="@user.Avatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />
+                                            }
+                                            else
+                                            {
+                                                <span class="d-flex align-items-center justify-content-center w-100 h-100" style="background: #f3f4f6; color: #bdbdbd; font-size: 1.7rem;">
+                                                    <i class="bi bi-person"></i>
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="action-column text-center">
+                                        <div class="btn-group">
+                                            <a asp-action="EditUser" asp-controller="Admin" asp-area="" asp-route-userName="@user.UserName"
+                                               class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip" title="Chỉnh sửa người dùng">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            <form asp-action="DeleteUser" asp-controller="Admin" asp-area="" asp-route-userName="@user.UserName"
+                                                  method="post" style="display:inline;" id="deleteUserForm_@user.UserName">
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-user" data-form-id="deleteUserForm_@user.UserName" data-bs-toggle="tooltip" title="Xóa người dùng">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <p class="text-muted small mb-0">Hiển thị tất cả người dùng</p>
+                    @if (ViewBag.TotalPages > 1)
+                    {
+                        <nav aria-label="Page navigation" class="mt-3">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                                    <a class="page-link" href="?page=@(ViewBag.CurrentPage - 1)">Trước</a>
+                                </li>
+                                @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                        <a class="page-link" href="?page=@i">@i</a>
+                                    </li>
+                                }
+                                <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                                    <a class="page-link" href="?page=@(ViewBag.CurrentPage + 1)">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/Admin/ManageUsers.css" />
+
+<!-- Modal xác nhận xóa người dùng -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="deleteUserModalLabel">Xác nhận xóa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">Bạn có chắc chắn muốn xóa người dùng này?</div>
+        <div class="text-danger small">Thao tác này không thể hoàn tác.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteUserBtn">
+            <i class="bi bi-trash me-1"></i> Xác nhận xóa
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Admin/ManageUsers.js"></script>
+}

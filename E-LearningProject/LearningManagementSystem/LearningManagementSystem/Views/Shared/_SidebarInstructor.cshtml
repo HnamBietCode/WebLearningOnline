@@ -1,0 +1,5 @@
+            <div class="nav-category">Chức năng</div>
+            <a asp-action="SelectGradeType" asp-controller="Instructor" class="@(ViewContext.RouteData.Values["Action"].ToString() == "SelectGradeType" ? "active" : "")"><i class="bi bi-clipboard-check"></i> <span>Chấm điểm</span></a>
+            <a asp-action="ViewProgressByUser" asp-controller="Instructor" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ViewProgressByUser" ? "active" : "")"><i class="bi bi-graph-up"></i> <span>Tiến trình học</span></a>
+            <a asp-action="ViewEnrollments" asp-controller="Instructor" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ViewEnrollments" ? "active" : "")"><i class="bi bi-people"></i> <span>Xem đăng ký học</span></a>
+            <a asp-action="AllTests" asp-controller="Course" class="@(ViewContext.RouteData.Values["Action"].ToString() == "AllTests" ? "active" : "")"><i class="bi bi-file-earmark-text"></i> <span>Xem tất cả bài kiểm tra</span></a> 

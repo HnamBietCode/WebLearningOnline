@@ -1,0 +1,113 @@
+﻿@model LearningManagementSystem.Models.Enrollment
+
+@{
+    string role = User.IsInRole("Admin") ? "Admin" : "Instructor";
+    ViewData["Title"] = $"Tạo ghi danh mới - E-Learning System ({role})";
+    Layout = role == "Admin" ? "_AdminLayout" : "_InstructorLayout";
+
+    var usersList = ViewBag.Users as SelectList;
+    bool noAvailableUsers = usersList == null || !usersList.Any();
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary-to-secondary">
+                    <h3 class="text-center font-weight-bold my-2 text-white">
+                        <i class="fas fa-user-plus me-2"></i>Tạo ghi danh mới
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Thông báo -->
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <strong>Có lỗi xảy ra:</strong>
+                            <ul class="mb-0 mt-2">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (noAvailableUsers)
+                    {
+                        <div class="alert alert-warning mt-2">
+                            <i class="fas fa-exclamation-circle me-1"></i>Không có học viên nào chưa đăng ký khóa học của bạn để ghi danh.
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-action="CreateEnrollment" asp-controller="Enrollment" method="post" class="needs-validation" novalidate>
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.EnrollmentId)
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select asp-for="UserName" class="form-select" asp-items="ViewBag.Users" id="userSelect" required>
+                                            <option value="">-- Chọn học viên --</option>
+                                        </select>
+                                        <label asp-for="UserName" class="control-label">Tên học viên</label>
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                        <div class="invalid-feedback">Vui lòng chọn học viên</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <select asp-for="CourseId" class="form-select" asp-items="ViewBag.Courses" id="courseSelect" required>
+                                            <option value="">-- Chọn khóa học --</option>
+                                        </select>
+                                        <label asp-for="CourseId" class="control-label">Khóa học</label>
+                                        <span asp-validation-for="CourseId" class="text-danger"></span>
+                                        <div class="invalid-feedback">Vui lòng chọn khóa học</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                <a asp-action="ManageEnrollments" asp-controller="Enrollment" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>Quay lại
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Tạo ghi danh
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        <i class="fas fa-info-circle me-1"></i>Học viên sẽ nhận được thông báo khi được ghi danh vào khóa học
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Enrollment/CreateEnrollment.js"></script>
+}

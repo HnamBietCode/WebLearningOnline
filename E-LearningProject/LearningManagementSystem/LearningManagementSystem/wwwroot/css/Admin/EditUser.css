@@ -1,0 +1,80 @@
+﻿/* Custom styles */
+.bg-gradient-purple {
+    background: linear-gradient(135deg, #6f42c1 0%, #8a63d2 100%);
+}
+
+.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+    .btn-purple:hover {
+        background-color: #5e35b1;
+        border-color: #5e35b1;
+        color: white;
+    }
+
+.btn-light {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+    color: #444;
+}
+
+    .btn-light:hover {
+        background-color: #e9ecef;
+        border-color: #ced4da;
+        color: #212529;
+    }
+
+.form-floating > .form-control {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+}
+
+.form-floating > label {
+    padding-top: 0.625rem;
+}
+
+.avatar-upload {
+    position: relative;
+}
+
+.card {
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* --- Bổ sung style xanh-trắng-đen cho đồng bộ giao diện --- */
+.text-primary { color: #2563eb !important; }
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    border: none;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    color: #fff;
+}
+.btn-outline-primary {
+    border: 1.5px solid #2563eb;
+    color: #2563eb;
+    background: #fff;
+}
+.btn-outline-primary:hover {
+    background: #2563eb;
+    color: #fff;
+}
+.card-header.bg-white {
+    border-bottom: 2px solid #e0e7ef;
+}
+.form-floating > label {
+    color: #222;
+}
+.form-control:disabled, .form-control[readonly] {
+    background-color: #f1f5f9;
+    color: #888;
+}

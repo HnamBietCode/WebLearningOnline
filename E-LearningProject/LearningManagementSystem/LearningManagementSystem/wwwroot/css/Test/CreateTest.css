@@ -1,0 +1,108 @@
+﻿/* Card style */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.question-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+    .question-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+/* Option style */
+.option-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+    .option-item:hover {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+    }
+
+.option-text {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.option-label {
+    width: 60px;
+    margin-right: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.remove-option {
+    margin-left: 10px;
+}
+
+.add-option {
+    margin-top: 15px;
+}
+
+/* Form elements */
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+    .btn-primary:hover {
+        background-color: #0a58ca;
+        border-color: #0a53be;
+    }
+
+.btn-success {
+    background-color: #198754;
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
+}
+
+/* Animation for adding/removing questions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+.shake-animation {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}

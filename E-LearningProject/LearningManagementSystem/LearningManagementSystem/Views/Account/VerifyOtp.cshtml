@@ -1,0 +1,78 @@
+﻿
+@{
+    Layout = null;
+    ViewData["Title"] = "Xác minh OTP - E-Learning";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="@Url.Content("~/css/Account/VerifyOtp.css")" rel="stylesheet" />
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-background"></div>
+
+    <!-- Floating Educational Icons -->
+    <div class="floating-icons">
+        <i class="bi bi-book floating-icon"></i>
+        <i class="bi bi-mortarboard floating-icon"></i>
+        <i class="bi bi-laptop floating-icon"></i>
+        <i class="bi bi-lightbulb floating-icon"></i>
+        <i class="bi bi-journal-text floating-icon"></i>
+        <i class="bi bi-award floating-icon"></i>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="brand-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h1 class="auth-title">Xác minh OTP</h1>
+                <p class="auth-subtitle">Nhập mã OTP đã được gửi đến email của bạn</p>
+            </div>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert-modern alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @TempData["Error"]
+                </div>
+            }
+
+            <form asp-action="VerifyOtp" asp-controller="Account" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="email" value="@ViewBag.Email" />
+                <div class="form-group">
+                    <label for="otp" class="form-label">
+                        <i class="bi bi-123"></i>
+                        Mã OTP
+                    </label>
+                    <input type="text" name="otp" id="otp" class="form-control" placeholder="Nhập mã OTP" maxlength="6" required />
+                </div>
+
+                <button type="submit" class="btn-modern btn-primary-modern">
+                    <i class="bi bi-shield-check"></i>
+                    Xác minh
+                </button>
+
+                <div class="text-center">
+                    <a href="@Url.Action("ForgotPassword", "Account")" class="text-link">
+                        <i class="bi bi-arrow-left me-1"></i>Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="@Url.Content("~/js/Account/VerifyOtp.js")"></script>
+</body>
+</html>

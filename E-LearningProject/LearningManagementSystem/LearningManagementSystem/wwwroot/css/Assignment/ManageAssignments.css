@@ -1,0 +1,75 @@
+﻿/* Màu chủ đạo và gradient */
+.bg-gradient-primary {
+    background: linear-gradient(to right, #4e54c8, #8f94fb);
+}
+
+/* Định dạng badge loại bài tập */
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+}
+
+/* Icon square cho danh sách bài tập */
+.icon-square {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+/* Pagination styles */
+.pagination .page-link {
+    border-radius: 4px;
+    margin: 0 2px;
+    color: #4e54c8;
+    box-shadow: none;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #4e54c8;
+    border-color: #4e54c8;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+}
+
+/* Hover effect trên table */
+.table-hover tbody tr:hover {
+    background-color: rgba(78, 84, 200, 0.05);
+}
+
+/* Hiệu ứng transition cho các button */
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Shadow hover cho card */
+.card {
+    transition: box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+/* Định nghĩa màu badge */
+.badge.bg-success.bg-opacity-10 {
+    color: #198754 !important;
+    background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.badge.bg-warning.bg-opacity-10 {
+    color: #ffc107 !important;
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.badge.bg-primary.bg-opacity-10 {
+    color: #0d6efd !important;
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+.badge.bg-info.bg-opacity-10 {
+    color: #0dcaf0 !important;
+    background-color: rgba(13, 202, 240, 0.1) !important;
+}

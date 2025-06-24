@@ -1,0 +1,162 @@
+﻿@model IEnumerable<LearningManagementSystem.Models.Notification>
+
+@{
+    ViewData["Title"] = "Thông báo của bạn - E-Learning System";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="notification-header text-center mb-5">
+        <h2 class="animate__animated animate__fadeIn">Thông báo của bạn</h2>
+        <p class="text-muted animate__animated animate__fadeIn animate__delay-1s">Quản lý và theo dõi các thông báo quan trọng</p>
+    </div>
+
+    <!-- Thông báo hệ thống -->
+    <div id="systemAlerts">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-wrapper animate__animated animate__fadeInDown">
+                <div class="alert alert-success d-flex align-items-center" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <div>@TempData["Success"]</div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-wrapper animate__animated animate__fadeInDown">
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>@TempData["Error"]</div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Thống kê thông báo -->
+    @if (Model != null && Model.Any())
+    {
+        @Html.AntiForgeryToken()
+        <div class="notification-stats d-flex justify-content-between mb-4 animate__animated animate__fadeIn animate__delay-1s">
+            <div class="stat-card">
+                <div class="stat-value">@Model.Count()</div>
+                <div class="stat-label">Tổng thông báo</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@Model.Count(n => !n.IsRead)</div>
+                <div class="stat-label">Chưa đọc</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">@Model.Count(n => n.IsRead)</div>
+                <div class="stat-label">Đã đọc</div>
+            </div>
+            @if (Model.Count(n => !n.IsRead) > 0)
+            {
+                <div class="ms-auto stat-action">
+                    <form asp-action="MarkAllAsRead" asp-controller="Notification" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi bi-check2-all me-2"></i>Đánh dấu tất cả đã đọc
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+
+        <!-- Bộ lọc thông báo -->
+        <div class="notification-filters mb-4 animate__animated animate__fadeIn animate__delay-2s">
+            <div class="btn-group" role="group" aria-label="Notification filters">
+                <button type="button" class="btn btn-filter active" data-filter="all">Tất cả</button>
+                <button type="button" class="btn btn-filter" data-filter="unread">Chưa đọc</button>
+                <button type="button" class="btn btn-filter" data-filter="read">Đã đọc</button>
+            </div>
+            <div class="search-box">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="form-control" id="searchNotifications" placeholder="Tìm kiếm thông báo...">
+            </div>
+        </div>
+
+        <!-- Danh sách thông báo -->
+        <div class="notifications-container animate__animated animate__fadeIn animate__delay-2s">
+            @foreach (var notification in Model.OrderByDescending(n => n.CreatedDate))
+            {
+                <div class="notification-card @(notification.IsRead ? "read" : "unread")" data-id="@notification.NotificationId">
+                    <div class="notification-status">
+                        <div class="status-indicator @(notification.IsRead ? "read" : "unread")"></div>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-icon">
+                            <i class="bi bi-bell-fill"></i>
+                        </div>
+                        <div class="notification-details">
+                            <h3 class="notification-title">@notification.Title</h3>
+                            <p class="notification-text">@notification.Content</p>
+                            <div class="notification-meta">
+                                <span class="notification-time">
+                                    <i class="bi bi-clock me-1"></i>
+                                    @notification.CreatedDate.ToString("HH:mm - dd/MM/yyyy")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        @if (!notification.IsRead)
+                        {
+                            <form asp-action="MarkAsRead" asp-controller="Notification" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@notification.NotificationId" />
+                                <button type="submit" class="btn btn-mark-read">
+                                    <i class="bi bi-check2"></i>
+                                    <span class="action-text">Đánh dấu đã đọc</span>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="read-marker">
+                                <i class="bi bi-check2-all"></i>
+                                <span>Đã đọc</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <div class="notification-empty text-center text-muted py-4" style="display:none;">
+                Không có thông báo nào
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state animate__animated animate__fadeIn">
+            <div class="empty-icon">
+                <i class="bi bi-bell-slash"></i>
+            </div>
+            <h3>Chưa có thông báo nào</h3>
+            <p>Bạn sẽ nhận được thông báo khi có cập nhật mới về khóa học hoặc hoạt động học tập</p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">
+                <i class="bi bi-house-door me-2"></i>Quay lại trang chủ
+            </a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="~/css/Notification/Notifications.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Notification/Notifications.js"></script>
+    <script>
+        // Xóa sự kiện JS xử lý mark-all-read vì đã dùng form submit
+        document.addEventListener('DOMContentLoaded', function () {
+            const markAllReadBtn = document.querySelector('.mark-all-read');
+            if (markAllReadBtn) {
+                markAllReadBtn.replaceWith(markAllReadBtn.cloneNode(true));
+            }
+        });
+    </script>
+}

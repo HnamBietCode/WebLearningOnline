@@ -1,0 +1,169 @@
+﻿@model LearningManagementSystem.Models.User
+
+@{
+    ViewData["Title"] = "Chỉnh sửa người dùng";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom-0">
+            <h3 class="mb-0 fw-bold text-primary">Chỉnh sửa người dùng</h3>
+        </div>
+        <div class="card-body p-4">
+            <!-- Notifications -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <div>@TempData["Success"]</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <div>@TempData["Error"]</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+
+            <!-- Model validation errors -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Vui lòng kiểm tra các lỗi sau:</strong>
+                    </div>
+                    <ul class="mb-0 ps-3">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
+
+            <form asp-action="EditUser" method="post" enctype="multipart/form-data" class="needs-validation">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="UserName" />
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row g-3">
+                            <!-- User Information -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="UserName" class="form-control bg-light" disabled id="username" />
+                                    <label asp-for="UserName">Tên đăng nhập</label>
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="FullName" class="form-control" id="fullname" placeholder="Họ và tên" />
+                                    <label asp-for="FullName">Họ và tên</label>
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Email" class="form-control" id="email" placeholder="Email" />
+                                    <label asp-for="Email">Email</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="password" name="password" class="form-control" id="password" placeholder="Mật khẩu mới" />
+                                    <label for="password">Mật khẩu mới (để trống nếu không đổi)</label>
+                                    <span class="text-danger" id="password-validation">
+                                        @if (ViewData.ModelState.ContainsKey("password"))
+                                        {
+                                            foreach (var error in ViewData.ModelState["password"].Errors)
+                                            {
+                                                @error.ErrorMessage <br />
+                                            }
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select asp-for="RoleId" class="form-select" id="role" asp-items="@(new SelectList(ViewBag.Roles, "RoleId", "RoleName"))">
+                                        <option value="">Chọn vai trò</option>
+                                    </select>
+                                    <label asp-for="RoleId">Vai trò</label>
+                                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-floating mb-3">
+                                    <textarea asp-for="Bio" class="form-control" id="bio" style="height: 120px" placeholder="Tiểu sử">@Model.Bio</textarea>
+                                    <label asp-for="Bio">Tiểu sử</label>
+                                    <span asp-validation-for="Bio" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">Ảnh đại diện</h5>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="avatar-upload mb-3">
+                                    @if (!string.IsNullOrEmpty(Model.Avatar))
+                                    {
+                                        <div class="avatar-preview mb-3">
+                                            <img src="@Model.Avatar" alt="Avatar" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="avatar-preview mb-3">
+                                            <div class="avatar-placeholder rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; margin: 0 auto;">
+                                                <i class="fas fa-user fa-4x text-secondary"></i>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="avatar-edit">
+                                        <label for="avatarFile" class="form-label">Thay đổi ảnh đại diện</label>
+                                        <input type="file" name="AvatarFile" id="avatarFile" class="form-control" accept="image/*" />
+                                        <span class="text-danger" data-valmsg-for="AvatarFile" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="ManageUsers" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/Admin/EditUser.css" />
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Admin/EditUser.js"></script>
+}

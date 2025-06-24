@@ -1,0 +1,468 @@
+﻿/* Main styles */
+:root {
+    --primary: #6f42c1;
+    --primary-hover: #5a32a3;
+    --primary-light: #f8f2ff;
+    --success: #28a745;
+    --success-light: #e8f5e9;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --text-dark: #212529;
+    --text-muted: #6c757d;
+    --border-radius: 12px;
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 5px 20px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: var(--text-dark);
+}
+
+/* Headings */
+h2 {
+    font-size: 1.8rem;
+}
+
+h4 {
+    font-size: 1.35rem;
+}
+
+/* Cart items container - Đảm bảo layout đồng đều */
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+}
+
+.cart-item {
+    flex: 1;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Card styling - Fixed height để đồng đều */
+.card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+    min-height: 160px; /* Đặt chiều cao tối thiểu */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Row inside card - Đảm bảo chiều cao đồng đều và không overflow */
+    .card .row {
+        flex: 1;
+        min-height: 140px; /* Chiều cao tối thiểu cho nội dung */
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+
+/* Course image - Fixed size */
+.course-image-container {
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 8px;
+    flex-shrink: 0; /* Không cho phép thu nhỏ */
+}
+
+    .course-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+.cart-item:hover .course-image-container img {
+    transform: scale(1.05);
+}
+
+/* Card body - Flexible height với content alignment */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 0;
+    min-height: 120px;
+}
+
+/* Course title - Limit lines để đồng đều */
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    /* Giới hạn 2 dòng cho title */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.8rem; /* Đảm bảo không gian cho 2 dòng */
+}
+
+/* Instructor badge */
+.card-text {
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Rating section */
+.rating {
+    font-size: 0.9rem;
+    margin-top: auto; /* Đẩy rating xuống dưới */
+}
+
+/* Price and remove section - Fixed positioning và container */
+.col-md-2 {
+    display: flex;
+    align-items: center;
+    min-height: 120px;
+    max-width: 100%;
+    flex-shrink: 0;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+    .col-md-2 .d-flex {
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        height: 100%;
+        max-width: 100%;
+    }
+
+/* Price styling */
+.text-primary.fw-bold.fs-5 {
+    margin-bottom: auto;
+    padding-top: 1rem;
+}
+
+/* Remove button positioning */
+.col-md-2 form {
+    margin-top: auto;
+    padding-bottom: 1rem;
+}
+
+/* Checkbox styling */
+.form-check-input {
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+}
+
+    .form-check-input:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+/* Checkbox column - Center alignment và container */
+.col-auto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    flex-shrink: 0;
+    padding-right: 0.75rem;
+}
+
+/* Course content column - Flexible với overflow control */
+.col-md-6 {
+    flex: 1;
+    max-width: calc(100% - 200px); /* Trừ đi width của image và price columns */
+    overflow: hidden;
+}
+
+/* Image column - Fixed width */
+.col-md-3 {
+    flex-shrink: 0;
+    max-width: 150px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: var(--primary);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+    .btn-primary:hover:not(:disabled) {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .btn-primary:disabled,
+    .btn-primary.disabled {
+        background-color: #ccc !important;
+        cursor: not-allowed !important;
+        pointer-events: none;
+        opacity: 0.65;
+        transform: none !important;
+    }
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary);
+        color: white;
+    }
+
+.checkout-btn {
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+    .checkout-btn.disabled {
+        pointer-events: none;
+    }
+
+/* Badge styling */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+}
+
+.bg-success-subtle {
+    background-color: var(--success-light);
+}
+
+/* Rating styling */
+.star {
+    color: #e9ecef;
+}
+
+    .star.filled {
+        color: var(--warning);
+    }
+
+/* Empty cart styling */
+.empty-cart {
+    margin-bottom: 2rem;
+}
+
+.empty-cart-icon {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: var(--primary-light);
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .empty-cart-icon i {
+        font-size: 3rem;
+        color: var(--primary);
+    }
+
+.empty-cart h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.empty-cart-message {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Features */
+.checkout-features {
+    padding: 1rem;
+    background-color: var(--primary-light);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+    .feature-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .feature-item i {
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+    }
+
+/* Empty cart tips */
+.tip-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+    .tip-item:last-child {
+        border-bottom: none;
+    }
+
+.tip-icon {
+    font-size: 1.5rem;
+}
+
+.tip-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Button remove styling */
+.btn-remove {
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    padding: 0;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+    .btn-remove:hover {
+        color: var(--danger) !important;
+        text-decoration: underline;
+    }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .checkout-btn {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+
+    .card {
+        min-height: 140px;
+    }
+
+        .card .row {
+            min-height: 120px;
+        }
+
+    .col-md-6 {
+        max-width: calc(100% - 180px);
+    }
+
+    .col-md-3 {
+        max-width: 130px;
+    }
+}
+
+@media (max-width: 768px) {
+    .course-image-container {
+        height: 100px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        -webkit-line-clamp: 2;
+        min-height: 2.5rem;
+    }
+
+    .card {
+        min-height: 120px;
+    }
+
+        .card .row {
+            min-height: 100px;
+            flex-direction: column;
+        }
+
+    .card-body {
+        min-height: 100px;
+    }
+
+    .col-auto,
+    .col-md-2,
+    .col-md-3,
+    .col-md-6 {
+        min-height: auto;
+        max-width: 100%;
+        flex: none;
+    }
+
+        .col-md-2 .d-flex {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 0.75rem 0;
+        min-height: 80px;
+    }
+
+    .feature-item {
+        font-size: 0.85rem;
+    }
+
+    .empty-cart-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+        .empty-cart-icon i {
+            font-size: 2.5rem;
+        }
+
+    .card {
+        min-height: 100px;
+    }
+
+        .card .row {
+            min-height: 80px;
+            flex-direction: column;
+            padding: 0.75rem;
+        }
+
+    .col-auto,
+    .col-md-2 {
+        min-height: auto;
+    }
+
+    .card-title {
+        font-size: 0.95rem;
+        min-height: 2.2rem;
+    }
+
+    .course-image-container {
+        height: 80px;
+        margin-bottom: 0.75rem;
+    }
+}

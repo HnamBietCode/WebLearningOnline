@@ -1,0 +1,196 @@
+﻿/* Colors */
+:root {
+    --primary-color: #5624d0;
+    --primary-hover: #4519a3;
+    --secondary-color: #f7f9fa;
+    --text-color: #2d2f31;
+    --light-text: #6c757d;
+    --border-color: #e9ecef;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: var(--text-color);
+}
+
+/* Override Bootstrap */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+    .btn-primary:hover, .btn-primary:focus {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Table styles */
+.table {
+    table-layout: fixed; /* Ép bảng sử dụng chiều rộng cố định */
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .table td, .table th {
+        border-top: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 0.75rem;
+        vertical-align: middle; /* Căn giữa nội dung trong ô */
+    }
+
+    .table th {
+        font-weight: 600;
+        color: var(--light-text);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+
+/* Định nghĩa chiều rộng cho từng cột */
+.username-column {
+    width: 15%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fullname-column {
+    width: 15%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.email-column {
+    width: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.role-column {
+    width: 10%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bio-column {
+    width: 15%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.avatar-column {
+    width: 10%;
+}
+
+.action-column {
+    width: 15%;
+}
+
+/* Fix vai trò badge tương tự như assignment-type-badge */
+.role-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    opacity: 1 !important;
+    max-width: 100%; /* Đảm bảo badge không vượt quá cột */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.25rem 0.5rem; /* Giảm padding để gọn hơn */
+    position: static !important; /* Đảm bảo không bị ảnh hưởng bởi position của các phần tử khác */
+}
+
+.badge.bg-info.bg-opacity-10 {
+    color: #0dcaf0 !important;
+    background-color: rgba(13, 202, 240, 0.1) !important;
+}
+
+.badge.bg-secondary.bg-opacity-10 {
+    color: #6c757d !important;
+    background-color: rgba(108, 117, 125, 0.1) !important;
+}
+
+/* Searchbox */
+#searchInput:focus {
+    box-shadow: none;
+    border-color: var(--primary-color);
+}
+
+.input-group-text {
+    border-color: var(--border-color);
+}
+
+/* Animations */
+.alert {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Điều chỉnh chiều rộng các cột trên màn hình nhỏ hơn */
+    .username-column, .fullname-column, .email-column,
+    .role-column, .bio-column, .avatar-column, .action-column {
+        width: auto;
+    }
+}
+
+/* Card header quản lý người dùng (đồng bộ với card header hệ thống) */
+.card.mb-4.border-0.shadow-sm.bg-white {
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(44, 62, 80, 0.07);
+    background: #fff;
+    border: none;
+    margin-bottom: 2rem;
+}
+.card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.card-title i {
+    font-size: 1.7rem;
+    color: var(--primary-color);
+}
+.card .btn.btn-primary {
+    background: var(--primary-color);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1.25rem;
+    box-shadow: 0 2px 8px rgba(86,36,208,0.08);
+    border: none;
+}
+.card .btn.btn-primary:hover {
+    background: var(--primary-hover);
+}
+.card .text-muted {
+    color: #6c757d !important;
+    font-size: 1rem;
+}

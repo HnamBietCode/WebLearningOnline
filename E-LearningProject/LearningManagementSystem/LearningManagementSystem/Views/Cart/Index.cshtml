@@ -1,0 +1,204 @@
+﻿@model IEnumerable<LearningManagementSystem.Models.ViewModels.CartItemViewModel>
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal totalPrice = Model.Sum(ci => ci.CartItem.Price);
+}
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Phần danh sách khóa học -->
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="text-dark fw-bold mb-1">Giỏ hàng của bạn</h2>
+                    <p class="text-muted">@Model.Count() khóa học trong giỏ hàng</p>
+                </div>
+                <div class="d-flex align-items-center">
+                    @if (Model.Any())
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAllCourses" checked>
+                            <label class="form-check-label text-primary fw-medium" for="selectAllCourses">
+                                Chọn tất cả
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (Model.Any())
+            {
+                <div class="cart-items">
+                    @foreach (var item in Model)
+                    {
+                        <div class="cart-item">
+                            <div class="card mb-3 border-0 shadow-sm">
+                                <div class="row g-0 align-items-center p-3">
+                                    <div class="col-auto pe-0">
+                                        <div class="form-check">
+                                            <input class="form-check-input course-checkbox" type="checkbox"
+                                                   id="course-@item.CartItem.CartItemId"
+                                                   data-id="@item.CartItem.CartItemId"
+                                                   data-price="@item.CartItem.Price" checked>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="course-image-container">
+                                            <img src="@(string.IsNullOrEmpty(item.CartItem.Course.ImageUrl) ? "/images/default-course.jpg" : item.CartItem.Course.ImageUrl)"
+                                                 alt="@item.CartItem.Course.CourseName"
+                                                 class="img-fluid rounded" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-body py-0">
+                                            <h5 class="card-title text-dark mb-2">@item.CartItem.Course.CourseName</h5>
+                                            <p class="card-text mb-2">
+                                                <span class="badge bg-light text-dark">
+                                                    <i class="bi bi-person-fill text-primary me-1"></i>
+                                                    @item.InstructorName
+                                                </span>
+                                            </p>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rating">
+                                                    @for (int i = 1; i <= 5; i++)
+                                                    {
+                                                        <span class="star @(i <= Math.Ceiling(item.Course.AverageRating ?? 0) ? "filled" : "")">★</span>
+                                                    }
+                                                    <span class="text-muted small ms-1">@(item.Course.AverageRating != null ? item.Course.AverageRating.Value.ToString("F1") : "Chưa có đánh giá")</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        <div class="d-flex flex-column align-items-end">
+                                            <p class="text-primary fw-bold fs-5 mb-2">₫@item.CartItem.Price.ToString("N0")</p>
+                                            <form asp-action="RemoveFromCart" asp-controller="Cart" asp-route-cartItemId="@item.CartItem.CartItemId" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-remove text-danger">
+                                                    <i class="bi bi-trash me-1"></i>Xóa
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-cart">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center py-5">
+                            <div class="empty-cart-icon">
+                                <i class="bi bi-cart-x"></i>
+                            </div>
+                            <h3 class="mt-4 fw-bold">Giỏ hàng của bạn đang trống</h3>
+                            <p class="text-muted mb-4 empty-cart-message">Hãy thêm một vài khóa học vào giỏ hàng và quay lại đây</p>
+                            <a href="@Url.Action("Index", "Search")" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-search me-2"></i>Khám phá khóa học
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Phần tổng giá và thanh toán -->
+        @if (Model.Any())
+        {
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="card-title border-bottom pb-3 mb-3">Tóm tắt đơn hàng</h4>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Khóa học đã chọn:</span>
+                            <span class="fw-medium selected-courses-count">@Model.Count()</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-muted">Tổng tiền:</span>
+                            <span class="fw-bold fs-5 text-primary total-price">₫@totalPrice.ToString("N0")</span>
+                        </div>
+                        <div class="mb-4">
+                            <div class="checkout-features">
+                                <div class="feature-item">
+                                    <i class="bi bi-infinity text-primary"></i>
+                                    <span>Truy cập trọn đời</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="bi bi-patch-check text-primary"></i>
+                                    <span>Chứng chỉ hoàn thành</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="bi bi-phone text-primary"></i>
+                                    <span>Học trên mọi thiết bị</span>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="checkoutForm" method="post" action="@Url.Action("Checkout", "Cart")">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="selectedCartItemIds" id="selectedCartItemIds" value="" />
+                            <button type="submit" class="btn btn-primary w-100 py-3 checkout-btn" id="checkoutButton">
+                                <i class="bi bi-credit-card me-2"></i>Thanh toán ngay
+                            </button>
+                        </form>
+                        <p class="text-center text-muted small mt-3">
+                            <i class="bi bi-shield-lock me-1"></i>
+                            Thanh toán an toàn & bảo mật
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Sidebar cho giỏ hàng trống -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="card-title border-bottom pb-3 mb-3">Thông tin hữu ích</h4>
+                        <div class="empty-cart-tips mb-4">
+                            <div class="tip-item">
+                                <div class="tip-icon mb-2">
+                                    <i class="bi bi-lightbulb text-warning"></i>
+                                </div>
+                                <h5 class="tip-title">Tìm kiếm khóa học phù hợp</h5>
+                                <p class="text-muted small">Sử dụng bộ lọc để tìm các khóa học phù hợp với mục tiêu học tập của bạn.</p>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon mb-2">
+                                    <i class="bi bi-star text-warning"></i>
+                                </div>
+                                <h5 class="tip-title">Đọc đánh giá từ học viên</h5>
+                                <p class="text-muted small">Kiểm tra đánh giá của học viên trước khi quyết định mua khóa học.</p>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon mb-2">
+                                    <i class="bi bi-tags text-warning"></i>
+                                </div>
+                                <h5 class="tip-title">Chú ý đến ưu đãi</h5>
+                                <p class="text-muted small">Thường xuyên kiểm tra các chương trình khuyến mãi để mua khóa học với giá tốt nhất.</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a href="@Url.Action("Index", "Search")" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-arrow-right me-2"></i>Xem tất cả khóa học
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Cart/Cart.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Cart/Cart.js"></script>
+}

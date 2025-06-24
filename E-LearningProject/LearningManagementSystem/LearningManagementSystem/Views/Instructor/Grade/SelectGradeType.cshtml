@@ -1,0 +1,91 @@
+﻿@model object
+@{
+    ViewData["Title"] = "Chọn loại chấm điểm - E-Learning System (Instructor)";
+    Layout = "~/Views/Shared/_InstructorLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Thành công!</strong> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Lỗi!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="grading-selection-container">
+    <div class="grading-header">
+        <div class="icon-circle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+        </div>
+        <h1 class="grading-title">Chọn loại chấm điểm</h1>
+        <p class="grading-subtitle">Vui lòng chọn loại chấm điểm bạn muốn thực hiện</p>
+    </div>
+
+    <div class="grading-options">
+        <form asp-action="SelectGradeType" asp-controller="Instructor" method="post">
+            <div class="grading-option-row">
+                <button type="submit" name="gradeType" value="assignment" class="grading-option-btn">
+                    <div class="option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="option-content">
+                        <h2 class="option-title">Chấm bài tập</h2>
+                        <p class="option-desc">Đánh giá và chấm điểm các bài tập của học viên</p>
+                    </div>
+                </button>
+            </div>
+
+            <div class="grading-option-row">
+                <button type="submit" name="gradeType" value="exam" class="grading-option-btn">
+                    <div class="option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clipboard">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <line x1="8" y1="14" x2="12" y2="14"></line>
+                            <line x1="8" y1="10" x2="16" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="option-content">
+                        <h2 class="option-title">Chấm bài kiểm tra</h2>
+                        <p class="option-desc">Đánh giá và chấm điểm các bài kiểm tra của học viên</p>
+                    </div>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="grading-footer">
+        <a asp-action="ManageCourses" asp-controller="Instructor" class="back-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Quay lại danh sách khóa học
+        </a>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Instructor/SelectGradeType.css" />
+}
+
+@section Scripts {
+    <script src="~/js/Instructor/SelectGradeType.js"></script>
+}

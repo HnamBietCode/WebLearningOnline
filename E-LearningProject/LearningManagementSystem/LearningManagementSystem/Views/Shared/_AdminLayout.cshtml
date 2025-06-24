@@ -1,0 +1,503 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dashboard Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --primary-dark: #3a0ca3;
+            --primary-hover: #3f37c9;
+            --light-bg: #f8f9fa;
+            --secondary-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-primary: #172b4d;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --border-color: #e9ecef;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        /* Fixed Logo */
+        .fixed-logo {
+            position: fixed;
+            top: 1.25rem;
+            left: 1.25rem;
+            z-index: 1100;
+        }
+
+            .fixed-logo .navbar-brand {
+                font-weight: 700;
+                color: var(--primary);
+                font-size: 1.25rem;
+                display: flex;
+                align-items: center;
+                padding: 0.75rem 1.25rem;
+                background-color: var(--card-bg);
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(67, 97, 238, 0.1);
+                transition: all 0.3s ease;
+            }
+
+                .fixed-logo .navbar-brand:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(67, 97, 238, 0.15);
+                }
+
+                .fixed-logo .navbar-brand i {
+                    color: var(--primary);
+                    margin-right: 0.75rem;
+                    font-size: 1.25rem;
+                }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background: var(--secondary-bg);
+            padding-top: 90px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1050;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+            .sidebar::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            .sidebar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .sidebar::-webkit-scrollbar-thumb {
+                background-color: var(--border-color);
+                border-radius: 10px;
+            }
+
+            .sidebar .system-title {
+                text-align: center;
+                margin-bottom: 40px;
+                color: var(--primary);
+                font-size: 24px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                padding: 0 20px;
+                position: relative;
+            }
+
+                .sidebar .system-title:after {
+                    content: '';
+                    position: absolute;
+                    bottom: -12px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 60px;
+                    height: 3px;
+                    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+                    border-radius: 3px;
+                }
+
+        .sidebar-nav {
+            margin-top: 1rem;
+            padding: 0 0.75rem;
+        }
+
+        .sidebar a {
+            color: var(--text-secondary);
+            padding: 0.875rem 1.5rem;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 0.375rem 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .sidebar a:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0;
+                height: 100%;
+                background: linear-gradient(90deg, rgba(67, 97, 238, 0.1) 0%, rgba(72, 149, 239, 0) 100%);
+                transition: width 0.3s ease;
+                z-index: -1;
+            }
+
+            .sidebar a:hover {
+                color: var(--primary);
+                transform: translateX(5px);
+            }
+
+                .sidebar a:hover:before {
+                    width: 100%;
+                }
+
+            .sidebar a.active {
+                background: linear-gradient(90deg, rgba(67, 97, 238, 0.15) 0%, rgba(72, 149, 239, 0.05) 100%);
+                color: var(--primary);
+                box-shadow: 0 2px 10px rgba(67, 97, 238, 0.15);
+                border-left: 3px solid var(--primary);
+            }
+
+            .sidebar a i {
+                margin-right: 12px;
+                font-size: 1.25rem;
+                color: var(--primary);
+                transition: all 0.3s ease;
+            }
+
+            .sidebar a:hover i {
+                transform: scale(1.1);
+            }
+
+        .nav-category {
+            padding: 0 1.5rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        /* Admin Header */
+        .admin-header {
+            background: var(--card-bg);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .admin-header:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+                opacity: 0.05;
+                z-index: 0;
+            }
+
+            .admin-header h4 {
+                margin: 0;
+                color: var(--text-primary);
+                font-weight: 700;
+                font-size: 1.5rem;
+                letter-spacing: 0.5px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .admin-header .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                position: relative;
+                z-index: 1;
+            }
+
+                .admin-header .header-actions a {
+                    color: var(--text-secondary);
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    background-color: rgba(67, 97, 238, 0.05);
+                }
+
+                    .admin-header .header-actions a:hover {
+                        color: var(--primary);
+                        background-color: rgba(67, 97, 238, 0.1);
+                        transform: translateY(-2px);
+                    }
+
+                    .admin-header .header-actions a i {
+                        font-size: 1rem;
+                    }
+
+        /* Top-Right Icons */
+        // XÓA toàn bộ block <div class="top-right-icons"> ... </div> (bao gồm cả chuông thông báo và avatar)
+
+        /* Button styling */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border: none;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+
+            .btn-primary:hover {
+                background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+            }
+
+        /* Charts and maps */
+        .chart-container, .map-container {
+            height: 100%;
+            min-height: 250px;
+            background-color: rgba(67, 97, 238, 0.02);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Custom scrollbar for whole page */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--primary-light);
+            }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 1200px) {
+            .sidebar
+
+        {
+            width: 240px;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 1.5rem;
+        }
+
+        }
+
+        @@media (max-width: 992px) {
+            .sidebar
+
+        {
+            width: 80px;
+            padding-top: 80px;
+        }
+
+        .sidebar .system-title {
+            font-size: 0;
+            margin-bottom: 30px;
+        }
+
+            .sidebar .system-title:after {
+                width: 30px;
+            }
+
+        .sidebar a {
+            padding: 0.75rem;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+            .sidebar a span, .nav-category {
+                display: none;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+
+        .main-content {
+            margin-left: 80px;
+            padding: 1.25rem;
+        }
+
+        }
+
+        @@media (max-width: 768px) {
+            .admin-header
+
+        {
+            padding: 1.25rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .admin-header h4 {
+            font-size: 1.25rem;
+        }
+
+        .btn-auth, .icon-link {
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .fixed-logo .navbar-brand {
+            font-size: 1.1rem;
+            padding: 0.6rem 1rem;
+        }
+
+        .fixed-logo {
+            top: 0.75rem;
+            left: 0.75rem;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .main-content
+
+        {
+            padding: 1rem;
+            margin-top: 70px;
+        }
+
+        .admin-header {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .widget {
+            padding: 1.25rem;
+        }
+
+            .widget .value {
+                font-size: 1.75rem;
+            }
+
+        .avatar {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .btn-auth, .icon-link {
+            padding: 0.5rem 0.75rem;
+        }
+
+        .icon-size {
+            font-size: 1.1rem;
+        }
+
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Fixed Logo -->
+    <div class="fixed-logo">
+        <a class="navbar-brand" href="/">
+            <i class="bi bi-book-open"></i> E-Learning System
+        </a>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="system-title">
+            AdminKit
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-category">Trang chính</div>
+            <a href="@Url.Action("Index", "Home")"><i class="bi bi-house-door"></i> <span>Trang chủ</span></a>
+            <a asp-action="Dashboard" asp-controller="Admin" class="@(ViewContext.RouteData.Values["Action"].ToString() == "Dashboard" ? "active" : "")"><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a>
+
+            <div class="nav-category">Quản lý nội dung</div>
+            <a asp-action="ManageCourses" asp-controller="Course" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ManageCourses" ? "active" : "")"><i class="bi bi-book"></i> <span>Quản lý khóa học</span></a>
+            <a asp-action="ManageComments" asp-controller="Admin" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ManageComments" ? "active" : "")"><i class="bi bi-chat-left-text"></i> <span>Quản lý bình luận</span></a>
+
+            <div class="nav-category">Quản lý thành viên</div>
+            <a asp-action="ManageUsers" asp-controller="Admin" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ManageUsers" ? "active" : "")"><i class="bi bi-person"></i> <span>Quản lý người dùng</span></a>
+            <a asp-action="ManageEnrollments" asp-controller="Enrollment" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ManageEnrollments" ? "active" : "")"><i class="bi bi-list-check"></i> <span>Quản lý đăng ký</span></a>
+
+            <div class="nav-category">Quản lý thanh toán</div>
+            <a asp-action="ManagePayment" asp-controller="Payment" class="@(ViewContext.RouteData.Values["Action"].ToString() == "ManagePayment" ? "active" : "")"><i class="bi bi-credit-card"></i> <span>Quản lý thanh toán</span></a>
+
+            <div class="nav-category">Thông báo</div>
+            <a asp-action="SendNotification" asp-controller="Notification" class="@(ViewContext.RouteData.Values["Action"].ToString() == "SendNotification" ? "active" : "")"><i class="bi bi-megaphone"></i> <span>Quản lý thông báo</span></a>
+
+            <div class="nav-category">Tài khoản</div>
+            <a href="@Url.Action("Logout", "Account")"><i class="bi bi-box-arrow-right"></i> <span>Đăng xuất</span></a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Admin Header -->
+        <div class="admin-header">
+            <h4>@ViewData["Title"]</h4>
+            <div class="header-actions">
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="row">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.13/dist/jquery.validate.unobtrusive.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

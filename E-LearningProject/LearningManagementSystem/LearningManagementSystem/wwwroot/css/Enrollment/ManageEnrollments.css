@@ -1,0 +1,58 @@
+﻿.btn-purple {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+    .btn-purple:hover {
+        background: linear-gradient(to right, #2575fc, #6a11cb);
+        color: white;
+        transform: scale(1.05);
+    }
+
+.pagination .page-link {
+    color: #6a5acd;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #4361ee;
+    border-color: #4361ee;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+}
+
+.avatar-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+}
+
+#enrollmentTable th {
+    font-weight: 600;
+}
+
+#enrollmentTable td {
+    vertical-align: middle;
+}
+
+.btn-group .btn {
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+#notifications {
+    position: relative;
+    top: 0;
+    right: 0;
+    z-index: 1050;
+    max-width: 100%;
+}
